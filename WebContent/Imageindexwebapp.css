@@ -1,0 +1,158 @@
+/** Add css rules here for your application. */
+
+
+/** Example rules used by the template application (remove for your app) */
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  color: #777777;
+  margin: 2px 0px 10px;
+  text-align: center;
+}
+
+.sendButton {
+  display: block;
+  font-size: 16pt;
+}
+
+/** Most GWT widgets already have a style name defined */
+.gwt-DialogBox {
+  width: 400px;
+}
+
+.dialogVPanel {
+  margin: 5px;
+}
+
+.serverResponseLabelError {
+  color: red;
+}
+.warningLabel {
+  color: red;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+.instLabel {
+  
+  font-weight: bold;
+  font-size: 1.5em;
+}
+/** Set ids using widget.getElement().setId("idOfElement") */
+#closeButton {
+  margin: 15px 6px 6px;
+}
+
+#container {
+   margin: 1%;
+   padding: 0;
+   width: 97%;
+   /*background-color: #fc9;*/
+}
+
+#left {
+	margin-left:auto;
+margin-right:auto;
+ width: 70%;  
+  /* float: left;
+   width: 46.5%;
+   margin: 1% 0 1% 1%;
+   padding: 1%;
+   background-color: #9cf;
+   color: #000;*/
+}
+#middleslider {
+ margin: 1%;
+   padding: 0;
+   width: 97%;
+}
+#right {
+	 margin: 1%;
+   padding: 0;
+   width: 97%;
+  /* float: right;*/
+  /* margin: 1% 1% 1% 0;*/
+}
+.instructionlabel  {
+	margin-left:auto;
+	margin-right:auto;
+	width:70%;
+ 	font-weight: bold;
+  
+}
+.my-button  {
+	margin-left:auto;
+	margin-right:auto;
+
+  
+}
+.centerplacement  {
+	margin-left:auto;
+	margin-right:auto;
+	width:50%;
+}
+
+.clear {
+   height: 0;
+   font-size: 1px;
+   margin: 0;
+   padding: 0;
+   line-height: 0;
+   clear: both;
+}
+.gwt-ProgressBar-shell {
+  border: 2px solid #faf9f7;
+  border-right: 2px solid #848280;
+  border-bottom: 2px solid #848280;
+  background-color: #AAAAAA;
+  height: 14pt;
+  width: 50%;
+}
+.gwt-ProgressBar-shell .gwt-ProgressBar-bar {
+  background-color: #67A7E3;
+}
+.gwt-ProgressBar-shell .gwt-ProgressBar-text {
+  padding: 0px;
+  margin: 0px;
+  color: white;
+}
+.gwt-SliderBar-shell {
+  border: 2px solid #faf9f7;
+  border-right: 2px solid #848280;
+  border-bottom: 2px solid #848280;
+  background-color: #efebe7;
+  height: 34pt;
+  width: 50%;
+}
+.gwt-SliderBar-shell .gwt-SliderBar-line {
+  border: 1px solid black;
+  background-color: white;
+  height: 4px;
+  width: 95%;
+  top: 22pt;
+  overflow: hidden;
+}
+.gwt-SliderBar-shell .gwt-SliderBar-knob {
+  top: 14pt;
+  width: 11px;
+  height: 21px;
+  z-index: 1;
+  cursor: pointer;
+}
+.gwt-SliderBar-shell .gwt-SliderBar-tick {
+  top: 12pt;
+  width: 1px;
+  height: 8pt;
+  background: black;
+  overflow: hidden;
+}
+.gwt-SliderBar-shell .gwt-SliderBar-label {
+  top: 2pt;
+  font-size: 8pt;
+  cursor: default;
+}
+.gwt-SliderBar-shell-focused {
+}
+.gwt-SliderBar-shell .gwt-SliderBar-line-sliding {
+  background-color: #DDDDDD;
+  cursor: pointer;
+}

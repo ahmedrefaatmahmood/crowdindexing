@@ -1,0 +1,3 @@
+# Module imageindexwebapp
+# RPC service class, partial path of RPC policy file
+edu.purdue.crowdindex.client.GreetingService, 55F3D71CC147A25A3A5C421B37B46BB4.gwt.rpc
