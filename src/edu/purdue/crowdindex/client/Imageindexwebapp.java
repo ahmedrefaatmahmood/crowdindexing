@@ -146,8 +146,8 @@ public class Imageindexwebapp implements EntryPoint {
                         }
 
 
-                        addVerticalFlowPanelRight();
-                        addVerticalFlowPanelleft();
+                        addVerticalFlowPanelText();
+                        addVerticalFlowPanelMain();
 
                         // errorLabel.setText(result);
                     }
@@ -180,14 +180,10 @@ public class Imageindexwebapp implements EntryPoint {
         DOM.getElementById("container").getStyle().setDisplay(Display.NONE);
         DOM.getElementById("clear").getStyle().setDisplay(Display.NONE);
 
-        //        RootPanel.get("right").setVisible(false);
-        //        RootPanel.get("left").setVisible(false);
-        //        RootPanel.get("container").setVisible(false);
-        //        RootPanel.get("clear").setVisible(false);
 
     }
 
-    private void addVerticalFlowPanelleft() {
+    private void addVerticalFlowPanelMain() {
         HashMap<String, String> frequenceies = new HashMap<String, String>();
         if("informed".equals(taskType) && dataInformedFrequenceies!=null && !"".equals(dataInformedFrequenceies)&&dataInformedFrequenceies.contains(",")){
             // errorLabel.setText(dataInformedFrequenceies);
@@ -205,47 +201,14 @@ public class Imageindexwebapp implements EntryPoint {
 
         //  PushButton b;
         RadioButton b;
-        if("astar".equals(taskType)){
-            //   b = new PushButton("A lot smaller..");
-            b = new RadioButton("radioGroup");
-            b.setHeight(smallButtonWidth);
-
-            b.setWidth(buttonWidth);
-            b.setTitle(Constants.LESS_THAN_SUBTREE);
-            b.addStyleName("my-button");
-            b.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-
-                    selectedResult = ( (RadioButton) event.getSource()).getTitle();
-                    System.out.println("Result selected as button " +( (RadioButton) event.getSource()).getTitle());
-                    showConfirmMessageBox();
-                }
-            });
-            // wrapper.add(b);
-            wrapper2.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-            wrapper2.add(b);
-            Label l;
-            if(Constants.SQUARES_DATA_SET_ID.equals(dataset))
-                l = new Label("Much smaller size.");
-            else
-                l = new Label("Much less expensive.");
-            l.setWidth(buttonWidth);
-            wrapper2.add(l);
-
-            fPanelLeft.add(wrapper2);
-
-            displayImagesOfAnItem(Constants.MIN_SUBTREE_KEY,dataiTemslist[1],frequenceies,"");
-        }
-
-
         wrapper2 = new VerticalPanel();
         b = new RadioButton("radioGroup");
         b.setHeight(smallButtonWidth);
         b.setWidth(buttonWidth);
-        b.setTitle(""+0);
-
+        if(taskType.equals(Constants.astar))
+            b.setTitle(""+Constants.LESS_THAN_SUBTREE);
+        else
+            b.setTitle(""+0);
         b.addStyleName("my-button");
         b.addClickHandler(new ClickHandler() {
 
@@ -260,6 +223,7 @@ public class Imageindexwebapp implements EntryPoint {
         wrapper2.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
         wrapper2.add(b);
+
         Label l ;
         if(Constants.SQUARES_DATA_SET_ID.equals(dataset))
             l = new Label("Smaller size.");
@@ -274,8 +238,11 @@ public class Imageindexwebapp implements EntryPoint {
 
         }
         fPanelLeft.add(wrapper2);
-
-        for (int i =2;i< dataiTemslist.length;i++) {
+        int i=2 ;
+        if("astar".equals(taskType)){
+            i=1;
+        }
+        for (;i< dataiTemslist.length;i++) {
             wrapper2 = new VerticalPanel();
             Image image;
             if(dataset.equals("1")){
@@ -283,6 +250,9 @@ public class Imageindexwebapp implements EntryPoint {
                 b.setHeight(smallButtonWidth);
                 b.setWidth(buttonWidth);
                 b.setTitle(""+(2*(i-1)-1));
+                if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
+                    b.setTitle(""+Constants.MAX_SUBTREE_KEY);
+                }
                 b.addStyleName("my-button");
                 b.addClickHandler(new ClickHandler() {
 
@@ -300,6 +270,9 @@ public class Imageindexwebapp implements EntryPoint {
                 image.setWidth(buttonWidth);
                 PushButton button = new PushButton(image);
                 button.setTitle(""+(2*(i-1)-1));
+                if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
+                    button.setTitle(""+Constants.MAX_SUBTREE_KEY);
+                }
                 System.out.println("test title is "+button.getTitle());
                 button.setHeight(buttonWidth);
                 button.setWidth(buttonWidth);
@@ -345,6 +318,9 @@ public class Imageindexwebapp implements EntryPoint {
                 b.setHeight(smallButtonWidth);
                 b.setWidth(buttonWidth);
                 b.setTitle(""+(2*(i-1)-1));
+                if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
+                    b.setTitle(""+Constants.MAX_SUBTREE_KEY);
+                }
                 b.addStyleName("my-button");
                 b.addClickHandler(new ClickHandler() {
 
@@ -369,7 +345,9 @@ public class Imageindexwebapp implements EntryPoint {
                     image.setWidth(buttonWidth);
                     PushButton b2 = new PushButton(image);
                     b2.setTitle(""+(2*(i-1)-1));
-
+                    if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
+                        b2.setTitle(""+Constants.MAX_SUBTREE_KEY);
+                    }
                     b2.setHeight(buttonWidth);
                     b2.setWidth(buttonWidth);
                     b2.addClickHandler(new ClickHandler() {
@@ -400,10 +378,10 @@ public class Imageindexwebapp implements EntryPoint {
             b = new RadioButton("radioGroup");
             // b.setHeight(smallButtonWidth);
             //  b.setWidth(buttonWidth);
-            if(taskType.equals("astar"))
+            b.setTitle(""+(2*(i-1)));
+            if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
                 b.setTitle(""+Constants.GREATER_THAN_SUBTREE);
-            else
-                b.setTitle(""+(2*(i-1)));
+            }
             System.out.println("test title is "+b.getTitle());
             b.addStyleName("my-button");
             b.addClickHandler(new ClickHandler() {
@@ -422,7 +400,7 @@ public class Imageindexwebapp implements EntryPoint {
 
             if(i !=dataiTemslist.length-1){
 
-                l = new Label("hi");
+                l = new Label();
                 l.setWidth(smallButtonWidth);
                 if("1".equals(dataset))
                     im.setHeight(buttonWidth);
@@ -454,37 +432,7 @@ public class Imageindexwebapp implements EntryPoint {
 
 
 
-        }/*
-        if("astar".equals(taskType)){
-            // displayImagesOfAnItem(Constants.MAX_SUBTREE_KEY,dataiTemslist[dataiTemslist.length-1],frequenceies,"");
-            //  b = new PushButton("A lot larger..");
-            wrapper2 = new VerticalPanel();
-            b = new RadioButton("radioGroup");
-            if("1".equals(dataset))
-                l = new Label("Much smaller size.");
-            else
-                l = new Label("Much more expensive.");
-            l.setWidth(buttonWidth);
-            b.setHeight(smallButtonWidth);
-            b.setWidth(buttonWidth);
-            b.setTitle(Constants.GREATER_THAN_SUBTREE);
-            b.addStyleName("my-button");
-            b.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-
-                    selectedResult = ( (RadioButton) event.getSource()).getTitle();
-                    System.out.println("Result selected as button " +( (RadioButton) event.getSource()).getTitle());
-                    showConfirmMessageBox();
-                }
-            });
-            // wrapper.add(b);
-            wrapper2.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-            wrapper2.add(b);
-            wrapper2.add(l);
-            fPanelLeft.add(wrapper2);
-        }*/
+        }
         center.clear();
 
 
@@ -639,7 +587,7 @@ public class Imageindexwebapp implements EntryPoint {
         accept.setFocus(true);
     }
 
-    private void addVerticalFlowPanelRight() {
+    private void addVerticalFlowPanelText() {
         //  fPanelRight = new FlowPanel();
         fPanelRight.clear();
         SimplePanel wrapper = new SimplePanel();

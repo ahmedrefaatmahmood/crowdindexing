@@ -10,6 +10,12 @@ public   class Constants {
     public static String pathBased = "pathbased" ;
 
 
+    //Task Type constanst
+    public static String astar = "astar";
+    public static String breadth = "breadth";
+    public static String depth = "depth";
+    public static String informed = "informed";
+
     //A* Backtracking constants
     public static String GREATER_THAN_SUBTREE = "100000" ;
     public static String LESS_THAN_SUBTREE = "-2" ;
