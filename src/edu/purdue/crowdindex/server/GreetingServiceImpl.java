@@ -1,8 +1,8 @@
 package edu.purdue.crowdindex.server;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,7 +11,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.logging.Logger;
 
+import com.google.appengine.api.utils.SystemProperty;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.purdue.crowdindex.client.GreetingService;
@@ -28,6 +30,9 @@ import edu.purdue.crowdindex.shared.control.Constants;
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements
 GreetingService {
+	
+	Logger log = Logger.getLogger(this.getClass().getName());
+	
     boolean indexBuild;
     ArrayList<BTree<Integer, String>> st;
     // TaskManager manger;
@@ -56,24 +61,34 @@ GreetingService {
         indexBuild = true;
 
     }
+    
+    
+    public static String getStackTrace(Throwable aThrowable) {
+        Writer result = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(result);
+        aThrowable.printStackTrace(printWriter);
+        return result.toString();
+      }
+    
     void writeToFile(String s){
-        FileWriter fstream;
-        try {
-            fstream = new FileWriter("AR_Logging.txt");
-
-            BufferedWriter out2 = new BufferedWriter(fstream);
-            // PrintWriter out2 = new PrintWriter(new BufferedWriter(new FileWriter(, true)));
-
-            //out2.println(s);
-            out2.write(s);
-
-            out2.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
-        }
+    	log.info(s);
+//        FileWriter fstream;
+//        try {
+//            fstream = new FileWriter("AR_Logging.txt");
+//
+//            BufferedWriter out2 = new BufferedWriter(fstream);
+//            // PrintWriter out2 = new PrintWriter(new BufferedWriter(new FileWriter(, true)));
+//
+//            //out2.println(s);
+//            out2.write(s);
+//
+//            out2.close();
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//            writeToFile(e.getMessage());
+//            writeToFile(getStackTrace(e));
+//        }
 
     }
     void readConfig() { // read the configuration from the database if reset is
@@ -111,9 +126,9 @@ GreetingService {
             }
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
 
             // connectToDB();
 
@@ -145,9 +160,9 @@ GreetingService {
             stmt.execute(statment);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
             // connectToDB();
         } finally {
             closeEveryThing(con, stmt, rs);
@@ -200,17 +215,17 @@ GreetingService {
                     // stmt.close();
                 } catch (SQLException e) {
 
-                    e.printStackTrace();
+                    e.printStackTrace(new PrintWriter(System.out));
                     writeToFile(e.getMessage());
-                    writeToFile(e.getStackTrace().toString());
+                    writeToFile(getStackTrace(e));
                     connectToDB();
                 }
             }
             generateTasks(con, stmt, rs,queryList);
         } catch (Exception e) {
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
-            e.printStackTrace();
+            writeToFile(getStackTrace(e));
+            e.printStackTrace(new PrintWriter(System.out));
             // connectToDB();
         } finally {
             closeEveryThing(con, stmt, rs);
@@ -312,8 +327,8 @@ GreetingService {
             }
         } catch (Exception e) {
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
-            e.printStackTrace();
+            writeToFile(getStackTrace(e));
+            e.printStackTrace(new PrintWriter(System.out));
             // connectToDB();
         } finally {
             closeEveryThing(con, stmt, rs);
@@ -646,9 +661,9 @@ GreetingService {
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
             // connectToDB();
 
         } finally {
@@ -680,9 +695,9 @@ GreetingService {
             // stmt.close();
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
             // connectToDB();
 
         } finally {
@@ -758,9 +773,9 @@ GreetingService {
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
             // connectToDB();
 
         } finally {
@@ -786,35 +801,53 @@ GreetingService {
 
     void connectToDB() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-
-            con1 = DriverManager.getConnection(
-                    // "jdbc:mysql://localhost:3306/crowdindex?allowMultiQueries=true",
-                    // "root", "1234");
-                    "jdbc:mysql://localhost:3306/crowdindex", "root", "1234");
-            stmt1 = con1.createStatement();
-
+        	
+        	con1 = getConnection();
+        
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
 
         }
 
     }
 
     public Connection getConnection() throws Exception {
-        Class.forName("com.mysql.jdbc.Driver");
+    	
+    	// AppEngine
+    	
+    	String url = null;
+    	if (SystemProperty.environment.value() ==
+    	SystemProperty.Environment.Value.Production) {
+    	// Connecting from App Engine.
+    	// Load the class that provides the "jdbc:google:mysql://"
+    	// prefix.
+    	Class.forName("com.mysql.jdbc.GoogleDriver");
+    	url =
+    	"jdbc:google:mysql://ece595-tm-starter:crowdindex?allowMultiQueries=true&user=root";
+    	} else {
+    	 // Connecting from an external network.
+    	Class.forName("com.mysql.jdbc.Driver");
+    	url = "jdbc:mysql://173.194.250.134:3306?allowMultiQueries=true&user=root";
+    	}
+    	
+    	Connection conn = DriverManager.getConnection(url);
+    	
+    	
+    	// Local
+//        Class.forName("com.mysql.jdbc.Driver");
+//        Connection conn =  DriverManager.getConnection(
+//                "jdbc:mysql://localhost:3306/crowdindex?allowMultiQueries=true",
+//                "root", "1234");
+//        return DriverManager
+//                .getConnection(
+//                        "jdbc:mysql://localhost:10159/crowdindex?allowMultiQueries=true",
+//                        "root", "1234");
 
-        return DriverManager
-                .getConnection(
-                        "jdbc:mysql://localhost:3306/crowdindex?allowMultiQueries=true",
-                        "root", "1234");
-        //        return DriverManager
-        //                .getConnection(
-        //                        "jdbc:mysql://localhost:10159/crowdindex?allowMultiQueries=true",
-        //                        "root", "1234");
+        return conn;
+                
 
     }
 
@@ -1055,9 +1088,9 @@ GreetingService {
             con.commit();
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
             try {
                 if (con != null)
                     con.rollback();
@@ -1105,9 +1138,9 @@ GreetingService {
             // stmt.close();
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
             // connectToDB();
         } finally {
             closeEveryThing(con, stmt, rs);
@@ -1141,9 +1174,9 @@ GreetingService {
             // stmt.close();
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
             // connectToDB();
         } finally {
             closeEveryThing(con, stmt, rs);
@@ -1477,9 +1510,9 @@ GreetingService {
             con.commit();
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
             try {
                 if (con != null)
                     con.rollback();
@@ -1929,24 +1962,12 @@ GreetingService {
             java.sql.Statement stmt = null;
             java.sql.ResultSet rs = null;
             try {
-                Class.forName("com.mysql.jdbc.Driver");
-            } catch (ClassNotFoundException e) {
-
-                e.printStackTrace();
-                writeToFile(e.getMessage());
-                writeToFile(e.getStackTrace().toString());
-                connectToDB();
-            }
-
-            try {
-                con = DriverManager
-                        .getConnection(
-                                "jdbc:mysql://localhost:3306/sakila?allowMultiQuery=true",
-                                "root", "1234");
+                con = getConnection();
             } catch (SQLException e) {
-                e.printStackTrace();
+            	
+                e.printStackTrace(new PrintWriter(System.out));
                 writeToFile(e.getMessage());
-                writeToFile(e.getStackTrace().toString());
+                writeToFile(getStackTrace(e));
                 connectToDB();
 
             }
@@ -1957,9 +1978,9 @@ GreetingService {
 
             } catch (SQLException e) {
 
-                e.printStackTrace();
+                e.printStackTrace(new PrintWriter(System.out));
                 writeToFile(e.getMessage());
-                writeToFile(e.getStackTrace().toString());
+                writeToFile(getStackTrace(e));
                 connectToDB();
 
             }
@@ -1976,9 +1997,9 @@ GreetingService {
                 // stmt.close();
             } catch (SQLException e) {
 
-                e.printStackTrace();
+                e.printStackTrace(new PrintWriter(System.out));
                 writeToFile(e.getMessage());
-                writeToFile(e.getStackTrace().toString());
+                writeToFile(getStackTrace(e));
                 connectToDB();
 
             }
@@ -1988,7 +2009,7 @@ GreetingService {
 
         } catch (Exception e) {
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
         }
         return "Result printed successfully";
     }
@@ -2019,9 +2040,9 @@ GreetingService {
             // stmt.close();
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
             // connectToDB();
 
         } finally {
@@ -2072,8 +2093,8 @@ GreetingService {
 
         } catch (Exception e) {
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
-            e.printStackTrace();
+            writeToFile(getStackTrace(e));
+            e.printStackTrace(new PrintWriter(System.out));
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -2115,9 +2136,9 @@ GreetingService {
                 reply = "User name already taken";
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
 
             // connectToDB();
 
@@ -2350,9 +2371,9 @@ GreetingService {
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
 
             // connectToDB();
 
@@ -2379,8 +2400,8 @@ GreetingService {
 
         } catch (Exception e) {
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
-            e.printStackTrace();
+            writeToFile(getStackTrace(e));
+            e.printStackTrace(new PrintWriter(System.out));
             res= "Fail";
         } finally {
             closeEveryThing(con, stmt, rs);

@@ -340,7 +340,8 @@ public class Imageindexwebapp implements EntryPoint {
                 //  hPanel.setBorderWidth(1);
 
                 for (int j = 0; j < new Integer( ss[0])  &&j<4; j++) {
-                    image = new Image("data/Image_"+dataiTemslist[i]+"/("+dataiTemslist[i]+"_"+j+").jpg");
+                	image = new Image("http://storage.googleapis.com/crowdindex/data/"+dataiTemslist[i]+"/("+dataiTemslist[i]+"_"+j+").jpg");
+//                    image = new Image("data/Image_"+dataiTemslist[i]+"/("+dataiTemslist[i]+"_"+j+").jpg");
                     image.setHeight(buttonWidth);
                     image.setWidth(buttonWidth);
                     PushButton b2 = new PushButton(image);
@@ -528,7 +529,8 @@ public class Imageindexwebapp implements EntryPoint {
             //  hPanel.setBorderWidth(1);
 
             for (int j = 0; j < new Integer( ss[0])  &&j<4; j++) {
-                image = new Image("data/Image_"+dataitemKey+"/("+dataitemKey+"_"+j+").jpg");
+            	image = new Image("http://storage.googleapis.com/crowdindex/data/"+dataitemKey+"/("+dataitemKey+"_"+j+").jpg");
+//                image = new Image("data/Image_"+dataitemKey+"/("+dataitemKey+"_"+j+").jpg");
                 image.setHeight(buttonWidth);
                 image.setWidth(buttonWidth);
                 PushButton b2 = new PushButton(image);
@@ -637,8 +639,8 @@ public class Imageindexwebapp implements EntryPoint {
                     "If you think that the price of the query car is almost equal to one of the cars, then press the button on top of that car.\r\n" +
                     "If you think that the price of the query car lies in-between two consecutive cars, then press the button that is in-between the two cars.\r\n";
 
-
-            image = new Image("data/Image_"+queryItem+"/("+queryItem+"_0).jpg");
+            image = new Image("http://storage.googleapis.com/crowdindex/data/"+queryItem+"/("+queryItem+"_0).jpg");
+//            image = new Image("data/Image_"+queryItem+"/("+queryItem+"_0).jpg");
             String [] dataItemsDetailsList  = dataItemsDetails.split("@");
 
             String []ss = dataItemsDetailsList[0].split("'");
@@ -653,7 +655,8 @@ public class Imageindexwebapp implements EntryPoint {
             l2.setStyleName("centerplacement");
 
             for (int j = 0; j < new Integer( ss[0])  &&j<4; j++) {
-                image = new Image("data/Image_"+queryItem+"/("+queryItem+"_"+j+").jpg");
+            	image = new Image("http://storage.googleapis.com/crowdindex/data/"+queryItem+"/("+queryItem+"_"+j+").jpg");
+//                image = new Image("data/Image_"+queryItem+"/("+queryItem+"_"+j+").jpg");
                 image.setHeight(buttonWidth);
                 image.setWidth(buttonWidth);
                 PushButton b2 = new PushButton(image);

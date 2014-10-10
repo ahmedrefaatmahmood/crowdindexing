@@ -5,18 +5,37 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
-import edu.purdue.crowdindex.logger.Logger;
+import com.google.appengine.api.utils.SystemProperty;
 
 public class DbConnection {
-    Logger logger = new Logger();
+    Logger logger = java.util.logging.Logger.getLogger(this.getClass().getName());
+    		
     public Connection getConnection() throws Exception {
-        Class.forName("com.mysql.jdbc.Driver");
-
-        return DriverManager
-                .getConnection(
-                        "jdbc:mysql://localhost:3306/crowdindex?allowMultiQueries=true",
-                        "root", "1234");
+    	
+    	String url = null;
+    	if (SystemProperty.environment.value() ==
+    	SystemProperty.Environment.Value.Production) {
+    	// Connecting from App Engine.
+    	// Load the class that provides the "jdbc:google:mysql://"
+    	// prefix.
+    	Class.forName("com.mysql.jdbc.GoogleDriver");
+    	url =
+    	"jdbc:google:mysql://ece595-tm-starter:crowdindex?allowMultiQueries=true";
+    	} else {
+    	 // Connecting from an external network.
+    	Class.forName("com.mysql.jdbc.Driver");
+    	url = "jdbc:mysql://173.194.250.134:3306?allowMultiQueries=true";
+    	}
+    	
+    	return DriverManager.getConnection(url,"root","1234");
+//        Class.forName("com.mysql.jdbc.Driver");
+//
+//        return DriverManager
+//                .getConnection(
+//                        "jdbc:mysql://localhost:3306/crowdindex?allowMultiQueries=true",
+//                        "root", "1234");
         //        return DriverManager
         //                .getConnection(
         //                        "jdbc:mysql://localhost:10159/crowdindex?allowMultiQueries=true",
@@ -28,22 +47,22 @@ public class DbConnection {
             try {
                 res.close();
             } catch (SQLException logOrIgnore) {
-                logger.log(logOrIgnore.getMessage());
-                logger.log(logOrIgnore.getStackTrace().toString());
+                logger.info(logOrIgnore.getMessage());
+                logger.info(logOrIgnore.getStackTrace().toString());
             }
         if (stmt != null)
             try {
                 stmt.close();
             } catch (SQLException logOrIgnore) {
-                logger.log(logOrIgnore.getMessage());
-                logger.log(logOrIgnore.getStackTrace().toString());
+                logger.info(logOrIgnore.getMessage());
+                logger.info(logOrIgnore.getStackTrace().toString());
             }
         if (con != null)
             try {
                 con.close();
             } catch (SQLException logOrIgnore) {
-                logger.log(logOrIgnore.getMessage());
-                logger.log(logOrIgnore.getStackTrace().toString());
+                logger.info(logOrIgnore.getMessage());
+                logger.info(logOrIgnore.getStackTrace().toString());
             }
 
     }
