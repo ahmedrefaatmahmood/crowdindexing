@@ -830,7 +830,7 @@ GreetingService {
     	} else {
     	 // Connecting from an external network.
     	Class.forName("com.mysql.jdbc.Driver");
-    	url = "jdbc:mysql://173.194.250.134:3306?allowMultiQueries=true&user=root";
+    	url = "jdbc:mysql://173.194.250.134:3306?allowMultiQueries=true&user=root&password=1234";
     	}
     	
     	Connection conn = DriverManager.getConnection(url);

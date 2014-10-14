@@ -264,8 +264,9 @@ public class Imageindexwebapp implements EntryPoint {
                         showConfirmMessageBox();
                     }
                 });
-
-                image = new Image("squareimages/("+dataiTemslist[i]+").jpg");
+                
+                image = new Image("http://storage.googleapis.com/crowdindex/data/squareimages/("+dataiTemslist[i]+").jpg");
+//                image = new Image("squareimages/("+dataiTemslist[i]+").jpg");
                 image.setHeight(buttonWidth);
                 image.setWidth(buttonWidth);
                 PushButton button = new PushButton(image);
@@ -340,7 +341,8 @@ public class Imageindexwebapp implements EntryPoint {
                 //  hPanel.setBorderWidth(1);
 
                 for (int j = 0; j < new Integer( ss[0])  &&j<4; j++) {
-                	image = new Image("http://storage.googleapis.com/crowdindex/data/"+dataiTemslist[i]+"/("+dataiTemslist[i]+"_"+j+").jpg");
+                	
+                	image = new Image("http://storage.googleapis.com/crowdindex/data/Image_"+dataiTemslist[i]+"/("+dataiTemslist[i]+"_"+j+").jpg");
 //                    image = new Image("data/Image_"+dataiTemslist[i]+"/("+dataiTemslist[i]+"_"+j+").jpg");
                     image.setHeight(buttonWidth);
                     image.setWidth(buttonWidth);
@@ -461,8 +463,9 @@ public class Imageindexwebapp implements EntryPoint {
                     showConfirmMessageBox();
                 }
             });
-
-            image = new Image("squareimages/("+dataitemKey+").jpg");
+            
+            image = new Image("http://storage.googleapis.com/crowdindex/data/squareimages/("+dataitemKey+").jpg");
+//            image = new Image("squareimages/("+dataitemKey+").jpg");
             image.setHeight(buttonWidth);
             image.setWidth(buttonWidth);
             PushButton button = new PushButton(image);
@@ -529,7 +532,8 @@ public class Imageindexwebapp implements EntryPoint {
             //  hPanel.setBorderWidth(1);
 
             for (int j = 0; j < new Integer( ss[0])  &&j<4; j++) {
-            	image = new Image("http://storage.googleapis.com/crowdindex/data/"+dataitemKey+"/("+dataitemKey+"_"+j+").jpg");
+            	
+            	image = new Image("http://storage.googleapis.com/crowdindex/data/Image_"+dataitemKey+"/("+dataitemKey+"_"+j+").jpg");
 //                image = new Image("data/Image_"+dataitemKey+"/("+dataitemKey+"_"+j+").jpg");
                 image.setHeight(buttonWidth);
                 image.setWidth(buttonWidth);
@@ -608,8 +612,9 @@ public class Imageindexwebapp implements EntryPoint {
                     "It is required to find the square with the closest matching size to the query square.\r\n" +
                     "If you think that the size of the query square  is almost equal to one of the squares, then press the button on top of that square.\r\n" +
                     "If you think that the size of the query  square  lies in-between two consecutive squares, then press the button that is in-between the two squares.\r\n";
-
-            image = new Image("squareimages/("+queryItem+").jpg");
+            
+            image = new Image("http://storage.googleapis.com/crowdindex/data/squareimages/("+queryItem+").jpg");
+//            image = new Image("squareimages/("+queryItem+").jpg");
             image.setHeight(buttonWidth);
             image.setWidth(buttonWidth);
 
@@ -639,7 +644,7 @@ public class Imageindexwebapp implements EntryPoint {
                     "If you think that the price of the query car is almost equal to one of the cars, then press the button on top of that car.\r\n" +
                     "If you think that the price of the query car lies in-between two consecutive cars, then press the button that is in-between the two cars.\r\n";
 
-            image = new Image("http://storage.googleapis.com/crowdindex/data/"+queryItem+"/("+queryItem+"_0).jpg");
+            image = new Image("http://storage.googleapis.com/crowdindex/data/Image_"+queryItem+"/("+queryItem+"_0).jpg");
 //            image = new Image("data/Image_"+queryItem+"/("+queryItem+"_0).jpg");
             String [] dataItemsDetailsList  = dataItemsDetails.split("@");
 
@@ -655,7 +660,8 @@ public class Imageindexwebapp implements EntryPoint {
             l2.setStyleName("centerplacement");
 
             for (int j = 0; j < new Integer( ss[0])  &&j<4; j++) {
-            	image = new Image("http://storage.googleapis.com/crowdindex/data/"+queryItem+"/("+queryItem+"_"+j+").jpg");
+            	
+        		image = new Image("http://storage.googleapis.com/crowdindex/data/Image_"+queryItem+"/("+queryItem+"_"+j+").jpg");
 //                image = new Image("data/Image_"+queryItem+"/("+queryItem+"_"+j+").jpg");
                 image.setHeight(buttonWidth);
                 image.setWidth(buttonWidth);
