@@ -22,9 +22,9 @@ public   class Constants {
     public static String MAX_SUBTREE_KEY = "10000" ;
     public static String MIN_SUBTREE_KEY = "-1" ;
     public static String SQUARES_DATA_SET_ID = "1" ;
-    public static double UPDATE_FACTOR = 2 ;
-
-
+    public static int UPDATE_FACTOR = 2 ;
+    public static int DIRECTION_HIGHER = 2 ;
+    public static int DIRECTION_LOWER = 1 ;
 
     public static String Unselected_item = "unseleceted" ;
     public  static  int MAX_NODE_RANGE= 20000;

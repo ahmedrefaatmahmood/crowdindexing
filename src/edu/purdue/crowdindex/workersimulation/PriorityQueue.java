@@ -50,9 +50,11 @@ public class PriorityQueue {
         for(int i =0;i<queue.size();i++){
             if( direction == Direction.higher&&(Double)queue.get(i).getNode().minEntry.key>=boundray){
                 queue.get(i).setScore(queue.get(i).getScore()*updateFactor);
+                queue.get(i).setgValue(queue.get(i).getgValue()*updateFactor);
             }
             else if( direction == Direction.smaller&&(Double)queue.get(i).getNode().minEntry.key<=boundray){
                 queue.get(i).setScore(queue.get(i).getScore()*updateFactor);
+                queue.get(i).setgValue(queue.get(i).getgValue()*updateFactor);
             }
         }
     }
