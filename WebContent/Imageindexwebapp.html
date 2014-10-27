@@ -13,6 +13,8 @@
 <!--                                                               -->
 <link type="text/css" rel="stylesheet" href="Imageindexwebapp.css">
 
+<link type="text/css" rel="stylesheet" href="css/font-awesome.min.css">
+
 <!--                                           -->
 <!-- Any title is fine                         -->
 <!--                                           -->
@@ -25,6 +27,104 @@
 <!--                                           -->
 <script type="text/javascript" language="javascript"
 	src="imageindexwebapp/imageindexwebapp.nocache.js"></script>
+	
+	<script type="text/javascript" language="javascript"
+	src="js/jquery.min.js"></script>
+	
+	
+	<script type="text/javascript">
+	
+	var qimagewidth = 142;
+	var aitemwidth_px = 168;
+	var aitemwidth_em = 14;
+	var initial_slide = 11;
+
+
+	function slideLeftQueryContent(){
+		// alert($("#query-content").css('left'));
+		var slide = parseInt($('#query-content').attr('slidevalue'));
+		
+		slide = slide - qimagewidth;
+		$('#query-content').attr('slidevalue',slide);
+		$("#query-content").css('left', slide+"px");
+
+	}
+
+	function slideRightQueryContent(){
+		// alert($("#query-content").css('left'));
+		var slide = parseInt($('#query-content').attr('slidevalue'));
+		slide = slide + qimagewidth;
+		$('#query-content').attr('slidevalue',slide);
+		$("#query-content").css('left', slide+"px");
+
+	}
+
+	function slideLeftAnswerContent(){
+		// alert($("#query-content").css('left'));
+		var slide = parseInt($('#answer-wrapper').attr('slidevalue'));
+		if (slide == 0) {
+			slide = slide - initial_slide;
+		}
+		else{
+			slide = slide - aitemwidth_em;
+		}
+		
+		$('#answer-wrapper').attr('slidevalue',slide);
+		$("#answer-wrapper").css('left', slide+"em");
+
+	}
+
+	function slideRightAnswerContent(){
+		// alert($("#query-content").css('left'));
+		var slide = parseInt($('#answer-wrapper').attr('slidevalue'));
+		if (slide == 0) {
+			slide = slide + initial_slide;
+		}
+		else{
+			slide = slide + aitemwidth_em;
+		}
+		
+		$('#answer-wrapper').attr('slidevalue',slide);
+		$("#answer-wrapper").css('left', slide+"em");
+
+	}
+
+	function toggleMoreImgs(itemId){
+		var span = $("#tn-toggle-imgs-"+itemId+" div span")[0];
+		var imgs = $('#'+itemId+' div.img-PushButton');
+		$.each(imgs, function(i,o){
+			if (i > 0){
+				$(o).toggleClass('hidden');
+			}
+		});
+
+		if (span.className == 'fa fa-chevron-down') {
+			console.log("showing more images for "+itemId+", found "+span.className);				
+			$(span).removeClass('fa-chevron-down');
+			$(span).addClass('fa-chevron-up');				
+		}
+		else{
+			$(span).removeClass('fa-chevron-up');		
+			$(span).addClass('fa-chevron-down');			
+		}
+		
+	}
+
+	
+	function initializeQuerySectionHandlers(){
+
+		$("#query-scroll-left").click(function(event) {
+			alert($("#query-content").css('left'));
+		});
+		alert("hi"+$("#query-content").css('left'));
+		console.log("query handlers initialized.");
+	}
+	
+	function initializePage(){		
+		alert('called from GWT');
+	}
+	</script>
+
 </head>
 
 <!--                                           -->
@@ -53,6 +153,8 @@
 	</div>
 	<h1>Crowd Indexing Project</h1>
 	<div>
+	
+	
 		<table align="center">
 			<tr>
 				<td id="signinInstContanier" colspan="6"></td>
@@ -118,6 +220,5 @@
 		<!-- container -->
 
 	</fieldset>
-
 </body>
 </html>

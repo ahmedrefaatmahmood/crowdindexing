@@ -154,7 +154,7 @@ GreetingService {
             String statment = "delete from crowdindex.task;"
                     + "delete from crowdindex.taskgroup;"
                     + "delete from crowdindex.backtrack;"
-                    + "delete from crowdindex.expectedDistanceError;"
+                    + "delete from crowdindex.expecteddistanceerror;"
                     + "delete from crowdindex.taskgroupusers ;";// +
             // "update crowdindex.query set solved = 0,retreivedpath=null,responsetime = null,retrievedresult=null,solvedsofar=0,depthpaths=null,totalDecisionDepth=null ;";
             stmt.execute(statment);
@@ -1595,9 +1595,9 @@ GreetingService {
                 expectedDistError+= i*errorCount.get(i)*Math.pow(testFanout, level);
             }
             stmt = con.createStatement();
-            stmt.execute("insert into crowdindex.expectedDistanceError (tree,level,disterr) values ("+treeIndex+","+level+","+expectedDistError+");");
+            stmt.execute("insert into crowdindex.expecteddistanceerror (tree,level,disterr) values ("+treeIndex+","+level+","+expectedDistError+");");
             stmt = con.createStatement();
-            rs = stmt.executeQuery("select  tree,level,disterr  from crowdindex.expectedDistanceError where tree = "+treeIndex+" order by level;");
+            rs = stmt.executeQuery("select  tree,level,disterr  from crowdindex.expecteddistanceerror where tree = "+treeIndex+" order by level;");
 
             ArrayList<Double> errors = new ArrayList<Double>();
             double  sum=0;
