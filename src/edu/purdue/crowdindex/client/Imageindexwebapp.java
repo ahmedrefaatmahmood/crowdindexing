@@ -46,6 +46,7 @@ public class Imageindexwebapp implements EntryPoint {
     String queryId;
     String queryItem;
     String taskType;
+    String equality;
     String dataItems;
     String dataset;
     String dataItemsDetails;
@@ -109,8 +110,6 @@ public class Imageindexwebapp implements EntryPoint {
     private void getTask(){
         errorLabel.setText("");
         String textToServer =userId+";"+taskId+";"+taskType+";"+queryId;
-
-
         // Then, we send the input to the server.
         //getTaskButton.setEnabled(false);
         textToServerLabel.setText(textToServer);
@@ -122,7 +121,6 @@ public class Imageindexwebapp implements EntryPoint {
                 public void onFailure(Throwable caught) {
                     errorLabel.setText(SERVER_ERROR);
                 }
-
                 @Override
                 public void onSuccess(String result) {
                     if(!result.equals("No  tasks for now")){
@@ -132,17 +130,18 @@ public class Imageindexwebapp implements EntryPoint {
                         taskId = s[0];
                         queryId = s[1];
                         queryItem =s[2];
-                        dataItems =s[3];
-                        taskType =s[4];
-                        dataset = s[5];
+                        equality = s[3];
+                        dataItems =s[4];
+                        taskType =s[5];
+                        dataset = s[6];
                         // showMessageBox(dataset);
                         if("2".equals(dataset)){
-                            dataItemsDetails = s[6];
+                            dataItemsDetails = s[7];
                             // errorLabel.setText(dataItemsDetails);
                             //  showMessageBox(dataItemsDetails);
                         }
                         if("informed".equals(taskType)){
-                            dataInformedFrequenceies = s[7];
+                            dataInformedFrequenceies = s[8];
                         }
 
 
@@ -162,17 +161,10 @@ public class Imageindexwebapp implements EntryPoint {
         }
     }
     private void showPanels() {
-        //        RootPanel.get("right").setVisible(true);
-        //        RootPanel.get("left").setVisible(true);
-        //        RootPanel.get("container").setVisible(true);
-        //        RootPanel.get("clear").setVisible(true);
-
         DOM.getElementById("right").getStyle().setDisplay(Display.BLOCK);
         DOM.getElementById("left").getStyle().setDisplay(Display.BLOCK);
         DOM.getElementById("container").getStyle().setDisplay(Display.BLOCK);
         DOM.getElementById("clear").getStyle().setDisplay(Display.BLOCK);
-
-
     }
     private void hidePanels() {
         DOM.getElementById("right").getStyle().setDisplay(Display.NONE);
@@ -254,16 +246,17 @@ public class Imageindexwebapp implements EntryPoint {
                     b.setTitle(""+Constants.MAX_SUBTREE_KEY);
                 }
                 b.addStyleName("my-button");
-                b.addClickHandler(new ClickHandler() {
+                if((""+Constants.equality_true).equals(equality))
+                    b.addClickHandler(new ClickHandler() {
 
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        // TODO Auto-generated method stub
-                        selectedResult = ( (RadioButton) event.getSource()).getTitle();
-                        System.out.println("hi i was clicked and i am button " +( (RadioButton) event.getSource()).getTitle());
-                        showConfirmMessageBox();
-                    }
-                });
+                        @Override
+                        public void onClick(ClickEvent event) {
+                            // TODO Auto-generated method stub
+                            selectedResult = ( (RadioButton) event.getSource()).getTitle();
+                            System.out.println("hi i was clicked and i am button " +( (RadioButton) event.getSource()).getTitle());
+                            showConfirmMessageBox();
+                        }
+                    });
 
                 image = new Image("squareimages/("+dataiTemslist[i]+").jpg");
                 image.setHeight(buttonWidth);
@@ -276,19 +269,21 @@ public class Imageindexwebapp implements EntryPoint {
                 System.out.println("test title is "+button.getTitle());
                 button.setHeight(buttonWidth);
                 button.setWidth(buttonWidth);
-                button.addClickHandler(new ClickHandler() {
+                if((""+Constants.equality_true).equals(equality))
+                    button.addClickHandler(new ClickHandler() {
 
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        // TODO Auto-generated method stub
-                        selectedResult = ( (PushButton) event.getSource()).getTitle();
-                        System.out.println("Result selected as button " +( (PushButton) event.getSource()).getTitle());
-                        showConfirmMessageBox();
-                    }
-                });
+                        @Override
+                        public void onClick(ClickEvent event) {
+                            // TODO Auto-generated method stub
+                            selectedResult = ( (PushButton) event.getSource()).getTitle();
+                            System.out.println("Result selected as button " +( (PushButton) event.getSource()).getTitle());
+                            showConfirmMessageBox();
+                        }
+                    });
                 button.addStyleName("my-button");
                 wrapper2.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-                wrapper2.add(b);
+                if((""+Constants.equality_true).equals(equality))
+                    wrapper2.add(b);
                 wrapper2.add(button);
                 if("informed".equals(taskType) && dataInformedFrequenceies!=null && !"".equals(dataInformedFrequenceies)&&dataInformedFrequenceies.contains(",")){
                     String value = frequenceies.get(""+button.getTitle());
@@ -334,7 +329,8 @@ public class Imageindexwebapp implements EntryPoint {
                 });
                 hPanel.add(new HTML(""));
                 hPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-                hPanel.add(b);
+                if((""+Constants.equality_true).equals(equality))
+                    hPanel.add(b);
 
                 // hPanel.add(l2);
                 //  hPanel.setBorderWidth(1);
@@ -350,16 +346,17 @@ public class Imageindexwebapp implements EntryPoint {
                     }
                     b2.setHeight(buttonWidth);
                     b2.setWidth(buttonWidth);
-                    b2.addClickHandler(new ClickHandler() {
+                    if((""+Constants.equality_true).equals(equality))
+                        b2.addClickHandler(new ClickHandler() {
 
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            // TODO Auto-generated method stub
-                            selectedResult = ( (PushButton) event.getSource()).getTitle();
-                            System.out.println("Result selected as button " +( (PushButton) event.getSource()).getTitle());
-                            showConfirmMessageBox();
-                        }
-                    });
+                            @Override
+                            public void onClick(ClickEvent event) {
+                                // TODO Auto-generated method stub
+                                selectedResult = ( (PushButton) event.getSource()).getTitle();
+                                System.out.println("Result selected as button " +( (PushButton) event.getSource()).getTitle());
+                                showConfirmMessageBox();
+                            }
+                        });
                     hPanel.add(b2);
 
                 }
@@ -826,7 +823,7 @@ public class Imageindexwebapp implements EntryPoint {
         slider.setNumLabels(0);
         SimplePanel wrapper = new SimplePanel();
         wrapper.setStyleName("centerplacement");
-        wrapper.add(slider);
+        // wrapper.add(slider);
         fPanelMiddle.add(wrapper);
 
 
