@@ -63,10 +63,10 @@
 		// alert($("#query-content").css('left'));
 		var slide = parseInt($('#answer-wrapper').attr('slidevalue'));
 		if (slide == 0) {
-			slide = slide - initial_slide;
+			slide = slide + initial_slide;
 		}
 		else{
-			slide = slide - aitemwidth_em;
+			slide = slide + aitemwidth_em;
 		}
 		
 		$('#answer-wrapper').attr('slidevalue',slide);
@@ -78,10 +78,10 @@
 		// alert($("#query-content").css('left'));
 		var slide = parseInt($('#answer-wrapper').attr('slidevalue'));
 		if (slide == 0) {
-			slide = slide + initial_slide;
+			slide = slide - initial_slide;
 		}
 		else{
-			slide = slide + aitemwidth_em;
+			slide = slide - aitemwidth_em;
 		}
 		
 		$('#answer-wrapper').attr('slidevalue',slide);
@@ -135,8 +135,8 @@
 <body>
 
 	<!-- OPTIONAL: include this if you want history support -->
-	<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
-		style="position: absolute; width: 0; height: 0; border: 0"></iframe>
+<!-- 	<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
+		style="position: absolute; width: 0; height: 0; border: 0"></iframe> -->
 
 	<!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
 	<noscript>
@@ -145,17 +145,17 @@
 			Your web browser must have JavaScript enabled in order for this
 			application to display correctly.</div>
 	</noscript>
-	<div>
-		<img src="title/purdue.jpg" alt="purdue logo" width="200" height="75">
-	</div>
-	<div id="taskBarContainer">
+
+	<div id="page">
+		<div id="top">
+			<img src="title/purdue.jpg" alt="purdue logo" width="200" height="75">
+			<h1>Crowd Indexing Project</h1>
+		</div>
+			<div id="taskBarContainer">
 		<!--  -->
-	</div>
-	<h1>Crowd Indexing Project</h1>
-	<div>
-	
-	
-		<table align="center">
+		</div>
+		<div id="info">
+			<table align="center">
 			<tr>
 				<td id="signinInstContanier" colspan="6"></td>
 				<!--  colspan="2" style="font-weight:bold; ">Please sign up or log in </td>-->
@@ -188,18 +188,14 @@
 			</tr>
 
 		</table>
-	</div>
-	<div id="errorLabelContainer">
+			<div id="errorLabelContainer">
 		<!-- any thing -->
 	</div>
 	<div id="taskAvailabilityLabelContainer">
 		<!-- any thing -->
 	</div>
-
-	<!-- left -->
-
-	<fieldset>
-		<div id="container">
+		</div>
+	<div id="container">
 			<!-- <p>Please select the proper location for the image in the right to the images at left .</p> -->
 			<!--  <legend>Data items</legend>-->
 
@@ -218,7 +214,13 @@
 
 		</div>
 		<!-- container -->
+	</div>
 
-	</fieldset>
+	
+	<div>
+	
+	
+		
+	</div>
 </body>
 </html>
