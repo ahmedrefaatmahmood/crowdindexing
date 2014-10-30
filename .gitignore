@@ -5,15 +5,17 @@
 *.war
 
 # gwt caches and compiled units #
-war/gwt_bree/
+WebContent/gwt_bree/
 gwt-unitCache/
 
 # boilerplate generated classes #
 .apt_generated/
 
 # more caches and things from deploy #
-war/WEB-INF/deploy/
-war/WEB-INF/classes/
+WebContent/WEB-INF/deploy/*.*
+WebContent/WEB-INF/classes/*.*
+WebContent/WEB-INF/classes/**/*.*
+
 
 #compilation logs
 .gwt/
@@ -26,3 +28,6 @@ www-test/
 
 #old GWT (1.5) created this dir
 .gwt-tmp/
+
+#MAC OSX
+.DS_Store
