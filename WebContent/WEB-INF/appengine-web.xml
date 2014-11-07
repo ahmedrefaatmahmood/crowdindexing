@@ -21,7 +21,7 @@
 
   <!-- Configure java.util.logging -->
   <system-properties> 
-  <property name="java.util.logging.config.file" value="WEB-INF/classes/log4j.properties"/> 
+  <property name="java.util.logging.config.file" value="WEB-INF/log4j.properties"/> 
 	</system-properties>
   
   <use-google-connector-j>true</use-google-connector-j>

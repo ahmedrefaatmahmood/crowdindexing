@@ -214,8 +214,7 @@ public class Imageindexwebapp implements EntryPoint {
 
 		RadioButton b;
 		b = new RadioButton("radioGroup");
-		b.setHeight(smallButtonWidth);
-		b.setWidth(buttonWidth);
+
 		if (taskType.equals(Constants.astar))
 			b.setTitle("" + Constants.LESS_THAN_SUBTREE);
 		else
@@ -233,29 +232,35 @@ public class Imageindexwebapp implements EntryPoint {
 			}
 		});
 
-		// wrapper2.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-
-		wrapper2.add(b);
+		FlowPanel selector = new FlowPanel();
+		selector.addStyleName("select-option");
+		selector.add(b);		
 
 		Label l;
 		if (Constants.SQUARES_DATA_SET_ID.equals(dataset))
 			l = new Label("Smaller size.");
 		else
 			l = new Label("Less expensive.");
+		
 		l.setWidth(buttonWidth);
-
-		wrapper2.add(l);
 
 		if ("informed".equals(taskType) && dataInformedFrequenceies != null
 				&& !"".equals(dataInformedFrequenceies)
 				&& dataInformedFrequenceies.contains(",")) {
 			String value = frequenceies.get("" + 0);
 			if (value != null && !"0".equals(value) && !"".equals(value)) {
-				wrapper2.getElement().getStyle()
-						.setBorderWidth(new Double(value), Unit.PX);
+				Label informed_count = new Label("("+value+")");
+				selector.add(informed_count);
+				// add border
+//				selector.getElement().getStyle()
+//						.setBorderWidth(new Double(value), Unit.PX);
 			}
 
 		}
+		
+		wrapper2.add(selector);
+		wrapper2.add(l);
+		
 		answerWrapper.add(wrapper2);
 
 		// start adding images
@@ -273,8 +278,10 @@ public class Imageindexwebapp implements EntryPoint {
 			if (dataset.equals("1")) {
 				// Square dataset
 				b = new RadioButton("radioGroup");
-				b.setHeight(smallButtonWidth);
-				b.setWidth(buttonWidth);
+				
+//				b.setHeight(smallButtonWidth);
+//				b.setWidth(buttonWidth);
+				
 				b.setTitle("" + (2 * (i - 1) - 1));
 				if (i == dataiTemslist.length - 1
 						&& taskType.equals(Constants.astar)) {
@@ -322,9 +329,11 @@ public class Imageindexwebapp implements EntryPoint {
 					}
 				});
 				button.addStyleName("my-button");
-
-				wrapper2.add(b);
-				wrapper2.add(button);
+				
+				selector = new FlowPanel();
+				selector.addStyleName("select-option");
+				selector.add(b);
+				
 				if ("informed".equals(taskType)
 						&& dataInformedFrequenceies != null
 						&& !"".equals(dataInformedFrequenceies)
@@ -332,11 +341,16 @@ public class Imageindexwebapp implements EntryPoint {
 					String value = frequenceies.get("" + button.getTitle());
 
 					if (value != null && !"0".equals(value)
-							&& !"".equals(value))
-						wrapper2.getElement().getStyle()
-								.setBorderWidth(new Double(value), Unit.PX);
-
+							&& !"".equals(value)){
+						Label informed_count = new Label("("+value+")");
+						selector.add(informed_count);
+						// add border
+//						selector.getElement().getStyle()
+//						.setBorderWidth(new Double(value), Unit.PX);
+					}						
 				}
+				wrapper2.add(selector);
+				wrapper2.add(button);
 				wrapper2.addStyleName("image-answer-item");
 				answerWrapper.add(wrapper2);
 			} else {
@@ -361,8 +375,8 @@ public class Imageindexwebapp implements EntryPoint {
 				// fPanelLeft.add(l);
 				b = new RadioButton("radioGroup", "         ");
 
-				b.setHeight(smallButtonWidth);
-				b.setWidth(buttonWidth);
+//				b.setHeight(smallButtonWidth);
+//				b.setWidth(buttonWidth);
 				b.setTitle("" + (2 * (i - 1) - 1));
 				if (i == dataiTemslist.length - 1
 						&& taskType.equals(Constants.astar)) {
@@ -381,12 +395,31 @@ public class Imageindexwebapp implements EntryPoint {
 						showConfirmMessageBox();
 					}
 				});
-				hPanel.add(new HTML(""));
-
-				hPanel.add(b);
-
+				
+				selector = new FlowPanel();
+				selector.addStyleName("select-option");
+				selector.add(b);
+				
 				// hPanel.add(l2);
 				// hPanel.setBorderWidth(1);
+				
+				if ("informed".equals(taskType)
+						&& dataInformedFrequenceies != null
+						&& !"".equals(dataInformedFrequenceies)
+						&& dataInformedFrequenceies.contains(",")) {
+					String value = frequenceies.get("" + (2 * (i - 1) - 1));
+					if (value != null && !"0".equals(value)
+							&& !"".equals(value)){
+						Label informed_count = new Label("("+value+")");
+						selector.add(informed_count);
+						
+						// add border 
+//						selector.getElement().getStyle()
+//						.setBorderWidth(new Double(value), Unit.PX);
+					}
+				}
+				
+				hPanel.add(selector);
 				
 				int imgCount = 0;
 				for (int j = 0; j < new Integer(ss[0]) && j < 4; j++) {
@@ -429,19 +462,6 @@ public class Imageindexwebapp implements EntryPoint {
 
 				}
 
-				if ("informed".equals(taskType)
-						&& dataInformedFrequenceies != null
-						&& !"".equals(dataInformedFrequenceies)
-						&& dataInformedFrequenceies.contains(",")) {
-					String value = frequenceies.get("" + (2 * (i - 1) - 1));
-					if (value != null && !"0".equals(value)
-							&& !"".equals(value))
-						hPanel.getElement().getStyle()
-								.setBorderWidth(new Double(value), Unit.PX);
-
-				}
-				
-				
 				
 				if (imgCount > 1){
 					PushButton moreImgsToggle = new PushButton(" ");
@@ -462,9 +482,6 @@ public class Imageindexwebapp implements EntryPoint {
 				answerWrapper.add(hPanel);
 
 			}
-			
-			
-			
 			
 			// create a separator or last item
 			wrapper2 = new FlowPanel();
@@ -491,12 +508,28 @@ public class Imageindexwebapp implements EntryPoint {
 					showConfirmMessageBox();
 				}
 			});
+			
+			selector = new FlowPanel();
+			selector.addStyleName("select-option");
+			selector.add(b);
+			
+			
+			if ("informed".equals(taskType) && dataInformedFrequenceies != null
+					&& !"".equals(dataInformedFrequenceies)
+					&& dataInformedFrequenceies.contains(",")) {
+				String value = frequenceies.get("" + (2 * (i - 1)));
+
+				if (value != null && !"0".equals(value) && !"".equals(value)){
+					Label informed_count = new Label("("+value+")");
+					selector.add(informed_count);
+					// add border
+//					selector.getElement().getStyle()
+//					.setBorderWidth(new Double(value), Unit.PX);
+				}
+			}
+			wrapper2.add(selector);
+			
 			Image im = new Image("title/seperator.jpg");
-
-			// wrapper2.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-
-			wrapper2.add(b);
-
 			// add separator, otherwise add last item
 			if (i != dataiTemslist.length - 1) {
 
@@ -521,16 +554,6 @@ public class Imageindexwebapp implements EntryPoint {
 				wrapper2.addStyleName("last-answer-item");
 			}
 
-			if ("informed".equals(taskType) && dataInformedFrequenceies != null
-					&& !"".equals(dataInformedFrequenceies)
-					&& dataInformedFrequenceies.contains(",")) {
-				String value = frequenceies.get("" + (2 * (i - 1)));
-
-				if (value != null && !"0".equals(value) && !"".equals(value))
-					wrapper2.getElement().getStyle()
-							.setBorderWidth(new Double(value), Unit.PX);
-
-			}
 			answerWrapper.add(wrapper2);
 
 		}
@@ -568,154 +591,170 @@ public class Imageindexwebapp implements EntryPoint {
 		fPanelLeft.add(scrollRight);
 		center.add(fPanelLeft);
 	}
-
-	void displayImagesOfAnItem(String radioButtonTitle, String dataitemKey,
-			HashMap<String, String> frequenceies, String dataItemDetails) {
-
-		// VerticalPanel wrapper2 = new VerticalPanel();
-		FlowPanel wrapper2 = new FlowPanel();
-		wrapper2.setStyleName("image-item");
-		RadioButton b;
-		Image image;
-		if (dataset.equals("1")) {
-			b = new RadioButton("radioGroup");
-			b.setHeight(smallButtonWidth);
-			b.setWidth(buttonWidth);
-			b.setTitle("" + radioButtonTitle);
-			b.addStyleName("my-button");
-			b.addClickHandler(new ClickHandler() {
-
-				@Override
-				public void onClick(ClickEvent event) {
-					// TODO Auto-generated method stub
-					selectedResult = ((RadioButton) event.getSource())
-							.getTitle();
-					System.out.println("hi i was clicked and i am button "
-							+ ((RadioButton) event.getSource()).getTitle());
-					showConfirmMessageBox();
-				}
-			});
-
-			image = new Image(
-					"http://storage.googleapis.com/crowdindex/data/squareimages/("
-							+ dataitemKey + ").jpg");
-			// image = new Image("squareimages/("+dataitemKey+").jpg");
-			image.setHeight(buttonWidth);
-			image.setWidth(buttonWidth);
-			PushButton button = new PushButton(image);
-			button.setTitle("" + radioButtonTitle);
-			System.out.println("test title is " + button.getTitle());
-			button.setHeight(buttonWidth);
-			button.setWidth(buttonWidth);
-			button.addClickHandler(new ClickHandler() {
-
-				@Override
-				public void onClick(ClickEvent event) {
-					// TODO Auto-generated method stub
-					selectedResult = ((PushButton) event.getSource())
-							.getTitle();
-					System.out.println("Result selected as button "
-							+ ((PushButton) event.getSource()).getTitle());
-					showConfirmMessageBox();
-				}
-			});
-			button.addStyleName("my-button");
-			// wrapper2.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-			wrapper2.add(b);
-			wrapper2.add(button);
-			if ("informed".equals(taskType) && dataInformedFrequenceies != null
-					&& !"".equals(dataInformedFrequenceies)
-					&& dataInformedFrequenceies.contains(",")) {
-				String value = frequenceies.get("" + button.getTitle());
-				// if (value != null && !"0".equals(value) && !"".equals(value))
-				// wrapper2.setBorderWidth(new Integer(value));
-
-			}
-			wrapper2.setStyleName("wrapper2");
-			fPanelLeft.add(wrapper2);
-		} else {
-			String[] ss = dataItemDetails.split("'");
-			// showMessageBox("hi"+dataItemsDetails);
-			// VerticalPanel hPanel = new VerticalPanel();
-			FlowPanel hPanel = new FlowPanel();
-			hPanel.setStyleName("hPanel");
-			// hPanel.setSpacing(5);
-
-			// errorLabel.setText(dataItemsDetailsList[i-1]);
-			Label l = new Label();
-			l.setText("     ");
-			Label l2 = new Label();
-			l2.setWidth(buttonWidth);
-			l2.setText(ss[2]);
-			// fPanelLeft.add(l);
-			b = new RadioButton("radioGroup", "         ");
-			b.setHeight(smallButtonWidth);
-			b.setWidth(buttonWidth);
-			b.setTitle("" + radioButtonTitle);
-			b.addStyleName("my-button");
-			b.addClickHandler(new ClickHandler() {
-
-				@Override
-				public void onClick(ClickEvent event) {
-					// TODO Auto-generated method stub
-					selectedResult = ((RadioButton) event.getSource())
-							.getTitle();
-					System.out.println("hi i was clicked and i am button "
-							+ ((RadioButton) event.getSource()).getTitle());
-					showConfirmMessageBox();
-				}
-			});
-			hPanel.add(new HTML(""));
-			// hPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-			hPanel.add(b);
-
-			// hPanel.add(l2);
-			// hPanel.setBorderWidth(1);
-
-			for (int j = 0; j < new Integer(ss[0]) && j < 4; j++) {
-
-				image = new Image(
-						"http://storage.googleapis.com/crowdindex/data/Image_"
-								+ dataitemKey + "/(" + dataitemKey + "_" + j
-								+ ").jpg");
-				// image = new
-				// Image("data/Image_"+dataitemKey+"/("+dataitemKey+"_"+j+").jpg");
-				image.setHeight(buttonWidth);
-				image.setWidth(buttonWidth);
-				PushButton b2 = new PushButton(image);
-				b2.setTitle("" + radioButtonTitle);
-
-				b2.setHeight(buttonWidth);
-				b2.setWidth(buttonWidth);
-				b2.addClickHandler(new ClickHandler() {
-
-					@Override
-					public void onClick(ClickEvent event) {
-						// TODO Auto-generated method stub
-						selectedResult = ((PushButton) event.getSource())
-								.getTitle();
-						System.out.println("Result selected as button "
-								+ ((PushButton) event.getSource()).getTitle());
-						showConfirmMessageBox();
-					}
-				});
-				hPanel.add(b2);
-
-			}
-
-			if ("informed".equals(taskType) && dataInformedFrequenceies != null
-					&& !"".equals(dataInformedFrequenceies)
-					&& dataInformedFrequenceies.contains(",")) {
-				String value = frequenceies.get("" + radioButtonTitle);
-				// if (value != null && !"0".equals(value) && !"".equals(value))
-				// hPanel.setBorderWidth(new Integer(value));
-
-			}
-			fPanelLeft.add(hPanel);
-
-		}
-
-	}
+//
+//	void displayImagesOfAnItem(String radioButtonTitle, String dataitemKey,
+//			HashMap<String, String> frequenceies, String dataItemDetails) {
+//
+//		// VerticalPanel wrapper2 = new VerticalPanel();
+//		FlowPanel wrapper2 = new FlowPanel();
+//		wrapper2.setStyleName("image-item");
+//		RadioButton b;
+//		Image image;
+//		if (dataset.equals("1")) {
+//			b = new RadioButton("radioGroup");
+//			b.setHeight(smallButtonWidth);
+//			b.setWidth(buttonWidth);
+//			b.setTitle("" + radioButtonTitle);
+//			b.addStyleName("my-button");
+//			b.addClickHandler(new ClickHandler() {
+//
+//				@Override
+//				public void onClick(ClickEvent event) {
+//					// TODO Auto-generated method stub
+//					selectedResult = ((RadioButton) event.getSource())
+//							.getTitle();
+//					System.out.println("hi i was clicked and i am button "
+//							+ ((RadioButton) event.getSource()).getTitle());
+//					showConfirmMessageBox();
+//				}
+//			});
+//
+//			image = new Image(
+//					"http://storage.googleapis.com/crowdindex/data/squareimages/("
+//							+ dataitemKey + ").jpg");
+//			// image = new Image("squareimages/("+dataitemKey+").jpg");
+//			image.setHeight(buttonWidth);
+//			image.setWidth(buttonWidth);
+//			PushButton button = new PushButton(image);
+//			button.setTitle("" + radioButtonTitle);
+//			System.out.println("test title is " + button.getTitle());
+//			button.setHeight(buttonWidth);
+//			button.setWidth(buttonWidth);
+//			button.addClickHandler(new ClickHandler() {
+//
+//				@Override
+//				public void onClick(ClickEvent event) {
+//					// TODO Auto-generated method stub
+//					selectedResult = ((PushButton) event.getSource())
+//							.getTitle();
+//					System.out.println("Result selected as button "
+//							+ ((PushButton) event.getSource()).getTitle());
+//					showConfirmMessageBox();
+//				}
+//			});
+//			button.addStyleName("my-button");
+//			FlowPanel selector = new FlowPanel();
+//			selector.addStyleName("select-option");
+//			selector.add(b);
+//		
+//			
+//			if ("informed".equals(taskType) && dataInformedFrequenceies != null
+//					&& !"".equals(dataInformedFrequenceies)
+//					&& dataInformedFrequenceies.contains(",")) {
+//				String value = frequenceies.get("" + button.getTitle());
+//				
+//				 if (value != null && !"0".equals(value) && !"".equals(value)){
+//						Label informed_count = new Label("("+value+")");
+//						selector.add(informed_count);
+//						// add border
+////						selector.getElement().getStyle().setBorderWidth(new Integer(value), Unit.PX);
+//				 }
+//				 
+//
+//			}
+//			wrapper2.add(selector);
+//			wrapper2.add(button);
+//			fPanelLeft.add(wrapper2);
+//		} else {
+//			String[] ss = dataItemDetails.split("'");
+//			// showMessageBox("hi"+dataItemsDetails);
+//			// VerticalPanel hPanel = new VerticalPanel();
+//			FlowPanel hPanel = new FlowPanel();
+//			hPanel.setStyleName("hPanel");
+//			// hPanel.setSpacing(5);
+//
+//			// errorLabel.setText(dataItemsDetailsList[i-1]);
+//			Label l = new Label();
+//			l.setText("     ");
+//			Label l2 = new Label();
+//			l2.setWidth(buttonWidth);
+//			l2.setText(ss[2]);
+//			// fPanelLeft.add(l);
+//			b = new RadioButton("radioGroup", "         ");
+//			b.setHeight(smallButtonWidth);
+//			b.setWidth(buttonWidth);
+//			b.setTitle("" + radioButtonTitle);
+//			b.addStyleName("my-button");
+//			b.addClickHandler(new ClickHandler() {
+//
+//				@Override
+//				public void onClick(ClickEvent event) {
+//					// TODO Auto-generated method stub
+//					selectedResult = ((RadioButton) event.getSource())
+//							.getTitle();
+//					System.out.println("hi i was clicked and i am button "
+//							+ ((RadioButton) event.getSource()).getTitle());
+//					showConfirmMessageBox();
+//				}
+//			});
+//			FlowPanel selector = new FlowPanel();
+//			selector.addStyleName("select-option");
+//			selector.add(b);
+//			
+//			
+//			if ("informed".equals(taskType) && dataInformedFrequenceies != null
+//					&& !"".equals(dataInformedFrequenceies)
+//					&& dataInformedFrequenceies.contains(",")) {
+//				String value = frequenceies.get("" + radioButtonTitle);
+//				 if (value != null && !"0".equals(value) && !"".equals(value)){
+//					 Label informed_count = new Label("("+value+")");
+//					 selector.add(informed_count);
+//					 // add border
+////					selector.getElement().getStyle().setBorderWidth(new Integer(value), Unit.PX);
+//				 }
+//				 
+//
+//			}
+//			
+//			hPanel.add(selector);
+//			
+//			for (int j = 0; j < new Integer(ss[0]) && j < 4; j++) {
+//
+//				image = new Image(
+//						"http://storage.googleapis.com/crowdindex/data/Image_"
+//								+ dataitemKey + "/(" + dataitemKey + "_" + j
+//								+ ").jpg");
+//				// image = new
+//				// Image("data/Image_"+dataitemKey+"/("+dataitemKey+"_"+j+").jpg");
+//				image.setHeight(buttonWidth);
+//				image.setWidth(buttonWidth);
+//				PushButton b2 = new PushButton(image);
+//				b2.setTitle("" + radioButtonTitle);
+//
+//				b2.setHeight(buttonWidth);
+//				b2.setWidth(buttonWidth);
+//				b2.addClickHandler(new ClickHandler() {
+//
+//					@Override
+//					public void onClick(ClickEvent event) {
+//						// TODO Auto-generated method stub
+//						selectedResult = ((PushButton) event.getSource())
+//								.getTitle();
+//						System.out.println("Result selected as button "
+//								+ ((PushButton) event.getSource()).getTitle());
+//						showConfirmMessageBox();
+//					}
+//				});
+//				hPanel.add(b2);
+//
+//			}
+//
+//			
+//			fPanelLeft.add(hPanel);
+//
+//		}
+//
+//	}
 
 	void showMessageBox(String text) {
 

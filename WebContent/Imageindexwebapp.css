@@ -201,7 +201,7 @@ width: 56em;
 	float:left;
 	position:relative;
 	padding:0em;
-	width: 3em;
+	width: 4.5em;
 	height: 11em;
 	overflow: hidden;
 }
@@ -232,7 +232,7 @@ margin-right: auto;
 #tn-scroll-left{
 	float:left;	
 	width:2em;
-	height:12em;
+	height:14em;
 	margin:auto;
 	padding:0em;
 }
@@ -244,13 +244,13 @@ margin-right: auto;
 	display: block;
 	vertical-align: middle;
 	position: relative;
-	top: 4.6em;	
+	top: 6.6em;	
 }
 
 #tn-scroll-right{
 	float:left;	
 	width:2em;
-	height:12em;
+	height:14em;
 	margin:auto;
 	padding:0em;
 }
@@ -262,9 +262,35 @@ margin-right: auto;
 	display: block;
 	vertical-align: middle;
 	position: relative;
-	top: 4.6em;
+	top: 6.6em;
 }
 
+#top {
+	background-color: black;
+}
+
+#top *{
+	display:block;	
+}
+#top span {
+	color: white;
+	font-size: 2em;
+	position: relative;
+	top: -2em;
+	left: 9em;
+	float: left;
+}
+
+.select-option {
+	height: 3em;
+	width: 3em;
+	margin: auto;
+}
+
+/*.select-option * {
+	float:left;
+}
+*/
 .gwt-PushButton {
 	padding:0em;
 }
