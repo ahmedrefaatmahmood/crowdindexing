@@ -8,6 +8,7 @@ public   class Constants {
     public static String taskStatusCanceled = "Cancel";
     public static String levelBased = "levelbased" ;
     public static String pathBased = "pathbased" ;
+    public static int defaultReplications =1;
 
 
     //Task Type constanst

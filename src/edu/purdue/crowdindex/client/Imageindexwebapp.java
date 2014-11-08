@@ -47,6 +47,7 @@ public class Imageindexwebapp implements EntryPoint {
     String queryItem;
     String taskType;
     String equality;
+    String level;
     String dataItems;
     String dataset;
     String dataItemsDetails;
@@ -90,6 +91,7 @@ public class Imageindexwebapp implements EntryPoint {
     Label instructionslabel;
     Label userNameLabel;
     Label passwordLable;
+    ClickHandler userSelectionHandler;
     int progress;
 
     /**
@@ -131,24 +133,18 @@ public class Imageindexwebapp implements EntryPoint {
                         queryId = s[1];
                         queryItem =s[2];
                         equality = s[3];
-                        dataItems =s[4];
-                        taskType =s[5];
-                        dataset = s[6];
-                        // showMessageBox(dataset);
+                        level= s[4];
+                        dataItems =s[5];
+                        taskType =s[6];
+                        dataset = s[7];
                         if("2".equals(dataset)){
-                            dataItemsDetails = s[7];
-                            // errorLabel.setText(dataItemsDetails);
-                            //  showMessageBox(dataItemsDetails);
+                            dataItemsDetails = s[8];
                         }
                         if("informed".equals(taskType)){
-                            dataInformedFrequenceies = s[8];
+                            dataInformedFrequenceies = s[9];
                         }
-
-
                         addVerticalFlowPanelText();
                         addVerticalFlowPanelMain();
-
-                        // errorLabel.setText(result);
                     }
                     else {
                         errorLabel.setText(result);
@@ -160,25 +156,22 @@ public class Imageindexwebapp implements EntryPoint {
             errorLabel.setText("Please submit the result of the previous task first");
         }
     }
-    private void showPanels() {
+    void showPanels() {
         DOM.getElementById("right").getStyle().setDisplay(Display.BLOCK);
         DOM.getElementById("left").getStyle().setDisplay(Display.BLOCK);
         DOM.getElementById("container").getStyle().setDisplay(Display.BLOCK);
         DOM.getElementById("clear").getStyle().setDisplay(Display.BLOCK);
     }
-    private void hidePanels() {
+    void hidePanels() {
         DOM.getElementById("right").getStyle().setDisplay(Display.NONE);
         DOM.getElementById("left").getStyle().setDisplay(Display.NONE);
         DOM.getElementById("container").getStyle().setDisplay(Display.NONE);
         DOM.getElementById("clear").getStyle().setDisplay(Display.NONE);
-
-
     }
 
     private void addVerticalFlowPanelMain() {
         HashMap<String, String> frequenceies = new HashMap<String, String>();
-        if("informed".equals(taskType) && dataInformedFrequenceies!=null && !"".equals(dataInformedFrequenceies)&&dataInformedFrequenceies.contains(",")){
-            // errorLabel.setText(dataInformedFrequenceies);
+        if(Constants.informed.equals(taskType) && dataInformedFrequenceies!=null && !"".equals(dataInformedFrequenceies)&&dataInformedFrequenceies.contains(",")){
             String [] itemsandFrequencies = dataInformedFrequenceies.split(",");
             for(String s :itemsandFrequencies){
                 if(s!=null && s.contains("@")){
@@ -188,34 +181,44 @@ public class Imageindexwebapp implements EntryPoint {
             }
         }
         fPanelLeft.clear();
-        VerticalPanel wrapper2 = new VerticalPanel();
         String [] dataiTemslist = dataItems.split(",");
 
-        //  PushButton b;
+        addLessThanPart( frequenceies);
+        int i=2 ;
+        if(Constants.astar.equals(taskType)||"0".equals(level)){//this is to dispaly the first item in the list
+            i=1;
+        }
+        for (;i< dataiTemslist.length;i++) {
+
+            if(dataset.equals("1")){
+                addDataItemsForDataSet1(frequenceies, i, dataiTemslist);
+            }
+            else{
+                addDataItemsForDataSet2(frequenceies, i, dataiTemslist);
+            }
+            addSeperatorOrGreaterThanItem(frequenceies, i, dataiTemslist);
+        }
+        center.clear();
+        center.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
+        center.add(fPanelLeft);
+    }
+    /**
+     * This method adds the less than component of the selection
+     */
+    void addLessThanPart(HashMap<String, String> frequenceies){
         RadioButton b;
-        wrapper2 = new VerticalPanel();
+        VerticalPanel wrapper2 = new VerticalPanel();
         b = new RadioButton("radioGroup");
         b.setHeight(smallButtonWidth);
         b.setWidth(buttonWidth);
-        if(taskType.equals(Constants.astar))
+        if(taskType.equals(Constants.astar)||"0".equals(level))
             b.setTitle(""+Constants.LESS_THAN_SUBTREE);
         else
             b.setTitle(""+0);
         b.addStyleName("my-button");
-        b.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
-                selectedResult = ( (RadioButton) event.getSource()).getTitle();
-                System.out.println("hi i was clicked and i am button " +( (RadioButton) event.getSource()).getTitle());
-                showConfirmMessageBox();
-            }
-        });
+        b.addClickHandler(userSelectionHandler);
         wrapper2.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-
         wrapper2.add(b);
-
         Label l ;
         if(Constants.SQUARES_DATA_SET_ID.equals(dataset))
             l = new Label("Smaller size.");
@@ -223,202 +226,183 @@ public class Imageindexwebapp implements EntryPoint {
             l = new Label("Less expensive.");
         l.setWidth(buttonWidth);
         wrapper2.add(l);
-        if("informed".equals(taskType) && dataInformedFrequenceies!=null && !"".equals(dataInformedFrequenceies)&&dataInformedFrequenceies.contains(",")){
+        if(Constants.informed.equals(taskType) && dataInformedFrequenceies!=null && !"".equals(dataInformedFrequenceies)&&dataInformedFrequenceies.contains(",")){
             String value = frequenceies.get(""+0);
             if(value!=null && !"0".equals(value) &&!"".equals(value))
                 wrapper2.setBorderWidth(new Integer(value));
 
         }
-        fPanelLeft.add(wrapper2);
-        int i=2 ;
-        if("astar".equals(taskType)){
-            i=1;
+        //non zero levels are allowed to have less than
+        //zero levels for insetion and backtracking are allowed to have less than in leaf level
+        if(!"0".equals(level)||("0".equals(level)&&(Constants.insert.equals(taskType)||Constants.astar.equals(taskType))))
+            fPanelLeft.add(wrapper2);
+
+    }
+    /**
+     * This method adds the images of items of dataset1
+     */
+    void addDataItemsForDataSet1(HashMap<String, String> frequenceies,int i ,String [] dataiTemslist){
+        RadioButton b = new RadioButton("radioGroup");
+        b.setHeight(smallButtonWidth);
+        b.setWidth(buttonWidth);
+        b.setTitle(""+(2*(i-1)-1));
+        if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
+            b.setTitle(""+Constants.MAX_SUBTREE_KEY);
         }
-        for (;i< dataiTemslist.length;i++) {
-            wrapper2 = new VerticalPanel();
-            Image image;
-            if(dataset.equals("1")){
-                b = new RadioButton("radioGroup");
-                b.setHeight(smallButtonWidth);
-                b.setWidth(buttonWidth);
-                b.setTitle(""+(2*(i-1)-1));
-                if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
-                    b.setTitle(""+Constants.MAX_SUBTREE_KEY);
-                }
-                b.addStyleName("my-button");
-                if((""+Constants.equality_true).equals(equality))
-                    b.addClickHandler(new ClickHandler() {
+        b.addStyleName("my-button");
+        if(((""+Constants.equality_true).equals(equality)||"0".equals(level))&&!Constants.insert.equals(taskType))
+            b.addClickHandler(userSelectionHandler);
 
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            // TODO Auto-generated method stub
-                            selectedResult = ( (RadioButton) event.getSource()).getTitle();
-                            System.out.println("hi i was clicked and i am button " +( (RadioButton) event.getSource()).getTitle());
-                            showConfirmMessageBox();
-                        }
-                    });
-
-                image = new Image("squareimages/("+dataiTemslist[i]+").jpg");
-                image.setHeight(buttonWidth);
-                image.setWidth(buttonWidth);
-                PushButton button = new PushButton(image);
-                button.setTitle(""+(2*(i-1)-1));
-                if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
-                    button.setTitle(""+Constants.MAX_SUBTREE_KEY);
-                }
-                System.out.println("test title is "+button.getTitle());
-                button.setHeight(buttonWidth);
-                button.setWidth(buttonWidth);
-                if((""+Constants.equality_true).equals(equality))
-                    button.addClickHandler(new ClickHandler() {
-
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            // TODO Auto-generated method stub
-                            selectedResult = ( (PushButton) event.getSource()).getTitle();
-                            System.out.println("Result selected as button " +( (PushButton) event.getSource()).getTitle());
-                            showConfirmMessageBox();
-                        }
-                    });
-                button.addStyleName("my-button");
-                wrapper2.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-                if((""+Constants.equality_true).equals(equality))
-                    wrapper2.add(b);
-                wrapper2.add(button);
-                if("informed".equals(taskType) && dataInformedFrequenceies!=null && !"".equals(dataInformedFrequenceies)&&dataInformedFrequenceies.contains(",")){
-                    String value = frequenceies.get(""+button.getTitle());
-                    if(value!=null && !"0".equals(value) &&!"".equals(value))
-                        wrapper2.setBorderWidth(new Integer(value));
-
-                }
-                fPanelLeft.add(wrapper2);
-            }
-            else{
-                String [] dataItemsDetailsList  = dataItemsDetails.split("@");
-
-                String []ss = dataItemsDetailsList[i].split("'");
-                //showMessageBox("hi"+dataItemsDetails);
-                VerticalPanel hPanel = new VerticalPanel();
-
-                //hPanel.setSpacing(5);
-
-                // errorLabel.setText(dataItemsDetailsList[i-1]);
-                l = new Label();
-                l.setText("     ");
-                Label l2 = new Label();
-                l2.setWidth(buttonWidth);
-                l2.setText(ss[2]);
-                //    fPanelLeft.add(l);
-                b = new RadioButton("radioGroup","         ");
-                b.setHeight(smallButtonWidth);
-                b.setWidth(buttonWidth);
-                b.setTitle(""+(2*(i-1)-1));
-                if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
-                    b.setTitle(""+Constants.MAX_SUBTREE_KEY);
-                }
-                b.addStyleName("my-button");
-                b.addClickHandler(new ClickHandler() {
-
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        // TODO Auto-generated method stub
-                        selectedResult = ( (RadioButton) event.getSource()).getTitle();
-                        System.out.println("hi i was clicked and i am button " +( (RadioButton) event.getSource()).getTitle());
-                        showConfirmMessageBox();
-                    }
-                });
-                hPanel.add(new HTML(""));
-                hPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-                if((""+Constants.equality_true).equals(equality))
-                    hPanel.add(b);
-
-                // hPanel.add(l2);
-                //  hPanel.setBorderWidth(1);
-
-                for (int j = 0; j < new Integer( ss[0])  &&j<4; j++) {
-                    image = new Image("data/Image_"+dataiTemslist[i]+"/("+dataiTemslist[i]+"_"+j+").jpg");
-                    image.setHeight(buttonWidth);
-                    image.setWidth(buttonWidth);
-                    PushButton b2 = new PushButton(image);
-                    b2.setTitle(""+(2*(i-1)-1));
-                    if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
-                        b2.setTitle(""+Constants.MAX_SUBTREE_KEY);
-                    }
-                    b2.setHeight(buttonWidth);
-                    b2.setWidth(buttonWidth);
-                    if((""+Constants.equality_true).equals(equality))
-                        b2.addClickHandler(new ClickHandler() {
-
-                            @Override
-                            public void onClick(ClickEvent event) {
-                                // TODO Auto-generated method stub
-                                selectedResult = ( (PushButton) event.getSource()).getTitle();
-                                System.out.println("Result selected as button " +( (PushButton) event.getSource()).getTitle());
-                                showConfirmMessageBox();
-                            }
-                        });
-                    hPanel.add(b2);
-
-                }
-
-                if("informed".equals(taskType) && dataInformedFrequenceies!=null && !"".equals(dataInformedFrequenceies)&&dataInformedFrequenceies.contains(",")){
-                    String value = frequenceies.get(""+(2*(i-1)-1));
-                    if(value!=null && !"0".equals(value) &&!"".equals(value))
-                        hPanel.setBorderWidth(new Integer(value));
-
-                }
-                fPanelLeft.add(hPanel);
-
-
-            }
-            wrapper2 = new VerticalPanel();
-            b = new RadioButton("radioGroup");
-            // b.setHeight(smallButtonWidth);
-            //  b.setWidth(buttonWidth);
-            b.setTitle(""+(2*(i-1)));
-            if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
-                b.setTitle(""+Constants.GREATER_THAN_SUBTREE);
-            }
-            System.out.println("test title is "+b.getTitle());
-            b.addStyleName("my-button");
-            b.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    // TODO Auto-generated method stub
-                    selectedResult = ( (RadioButton) event.getSource()).getTitle();
-                    System.out.println("Result selected as button " +( (RadioButton) event.getSource()).getTitle());
-                    showConfirmMessageBox();
-                }
-            });
-            Image im = new Image("title/seperator.jpg");
-            wrapper2.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
+        Image image = new Image("squareimages/("+dataiTemslist[i]+").jpg");
+        image.setHeight(buttonWidth);
+        image.setWidth(buttonWidth);
+        Image blankImage = new Image();
+        //  blankImage.setHeight(smallButtonWidth);
+        // blankImage.setWidth(buttonWidth);
+        blankImage.setStyleName("blankImage");
+        PushButton button = new PushButton(image);
+        button.setTitle(""+(2*(i-1)-1));
+        if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
+            button.setTitle(""+Constants.MAX_SUBTREE_KEY);
+        }
+        System.out.println("test title is "+button.getTitle());
+        button.setHeight(buttonWidth);
+        button.setWidth(buttonWidth);
+        if(((""+Constants.equality_true).equals(equality)||"0".equals(level))&&!Constants.insert.equals(taskType))
+            button.addClickHandler(userSelectionHandler);
+        button.addStyleName("my-button");
+        VerticalPanel wrapper2 = new VerticalPanel();
+        wrapper2.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
+        if(((""+Constants.equality_true).equals(equality)||"0".equals(level))&&!Constants.insert.equals(taskType))
             wrapper2.add(b);
+        else
+            wrapper2.add(blankImage);
+        wrapper2.add(button);
+        if("informed".equals(taskType) && dataInformedFrequenceies!=null && !"".equals(dataInformedFrequenceies)&&dataInformedFrequenceies.contains(",")){
+            String value = frequenceies.get(""+button.getTitle());
+            if(value!=null && !"0".equals(value) &&!"".equals(value))
+                wrapper2.setBorderWidth(new Integer(value));
 
-            if(i !=dataiTemslist.length-1){
+        }
+        fPanelLeft.add(wrapper2);
+    }
+    /**
+     * This method adds the images of items of dataset2
+     */
+    void addDataItemsForDataSet2(HashMap<String, String> frequenceies,int i ,String [] dataiTemslist){
+        String [] dataItemsDetailsList  = dataItemsDetails.split("@");
+        String []ss = dataItemsDetailsList[i].split("'");
 
-                l = new Label();
-                l.setWidth(smallButtonWidth);
-                if("1".equals(dataset))
-                    im.setHeight(buttonWidth);
-                else
-                    im.setHeight(longseperator);
-                im.setWidth(smallButtonWidth);
-                // wrapper2.add(l);
-                wrapper2.add(im);
+        Image blankImage = new Image();
+        //  blankImage.setHeight(smallButtonWidth);
+        // blankImage.setWidth(buttonWidth);
+        blankImage.setStyleName("blankImage");
+
+        VerticalPanel hPanel = new VerticalPanel();
+        Label l = new Label();
+        l.setText("     ");
+        Label l2 = new Label();
+        l2.setWidth(buttonWidth);
+        l2.setText(ss[2]);
+        RadioButton  b = new RadioButton("radioGroup","         ");
+        b.setHeight(smallButtonWidth);
+        b.setWidth(buttonWidth);
+        b.setTitle(""+(2*(i-1)-1));
+        if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
+            b.setTitle(""+Constants.MAX_SUBTREE_KEY);
+        }
+        b.addStyleName("my-button");
+        b.addClickHandler(userSelectionHandler);
+        hPanel.add(new HTML(""));
+        hPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
+        if(((""+Constants.equality_true).equals(equality)||"0".equals(level))&&!Constants.insert.equals(taskType))
+            hPanel.add(b);
+        else
+            hPanel.add(blankImage);
+        for (int j = 0; j < new Integer( ss[0])  &&j<4; j++) {
+            Image image = new Image("data/Image_"+dataiTemslist[i]+"/("+dataiTemslist[i]+"_"+j+").jpg");
+            image.setHeight(buttonWidth);
+            image.setWidth(buttonWidth);
+            PushButton b2 = new PushButton(image);
+            b2.setTitle(""+(2*(i-1)-1));
+            if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
+                b2.setTitle(""+Constants.MAX_SUBTREE_KEY);
             }
-            else{
+            b2.setHeight(buttonWidth);
+            b2.setWidth(buttonWidth);
+            if(((""+Constants.equality_true).equals(equality)||"0".equals(level))&&!Constants.insert.equals(taskType))
+                b2.addClickHandler(userSelectionHandler);
+            hPanel.add(b2);
 
-                if("1".equals(dataset))
-                    l = new Label("Larger size.");
-                else
-                    l = new Label("More Expensive.");
-                l.setWidth(buttonWidth);
-                wrapper2.add(l);
+        }
+        if("informed".equals(taskType) && dataInformedFrequenceies!=null && !"".equals(dataInformedFrequenceies)&&dataInformedFrequenceies.contains(",")){
+            String value = frequenceies.get(""+(2*(i-1)-1));
+            if(value!=null && !"0".equals(value) &&!"".equals(value))
+                hPanel.setBorderWidth(new Integer(value));
+
+        }
+        fPanelLeft.add(hPanel);
+    }
+    /**
+     * This method adds the seperator or the last item in the main window
+     * @param frequenceies
+     * @param i
+     * @param dataiTemslist
+     */
+    void addSeperatorOrGreaterThanItem(HashMap<String, String> frequenceies,int i ,String [] dataiTemslist){
+        Image blankImage = new Image();
+        //  blankImage.setHeight(smallButtonWidth);
+        // blankImage.setWidth(buttonWidth);
+        blankImage.setStyleName("blankImage");
+
+        VerticalPanel  wrapper2 = new VerticalPanel();
+        RadioButton b = new RadioButton("radioGroup");
+        b.setTitle(""+(2*(i-1)));
+        if(i ==dataiTemslist.length-1  &&taskType.equals(Constants.astar)){
+            b.setTitle(""+Constants.GREATER_THAN_SUBTREE);
+        }
+        System.out.println("test title is "+b.getTitle());
+        b.addStyleName("my-button");
+        b.addClickHandler(userSelectionHandler);
+        Image im = new Image("title/seperator.jpg");
+        wrapper2.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
+        Label l = new Label();
+        if(i !=dataiTemslist.length-1){
+            //at non zero level the seperator exist
+            //at level zero only insertions are allowed to have a selection for below
+            if(!"0".equals(level)||("0".equals(level)&&(Constants.insert.equals(taskType))))
+                wrapper2.add(b);
+            else
+                wrapper2.add(blankImage);
+            l = new Label();
+            l.setWidth(smallButtonWidth);
+            if("1".equals(dataset))
+                im.setHeight(buttonWidth);
+            else
+                im.setHeight(longseperator);
+            im.setWidth(smallButtonWidth);
+            wrapper2.add(im);
+            if("informed".equals(taskType) && dataInformedFrequenceies!=null && !"".equals(dataInformedFrequenceies)&&dataInformedFrequenceies.contains(",")){
+                String value = frequenceies.get(""+(2*(i-1)));
+                if(value!=null && !"0".equals(value) &&!"".equals(value))
+                    wrapper2.setBorderWidth(new Integer(value));
+
             }
+            fPanelLeft.add(wrapper2);
+        }
+        //non zero levels are allowed to have greater than
+        //zero levels for insetion and backtracking are allowed to have greater than in leaf level
+        else if(!"0".equals(level)||("0".equals(level)&&(Constants.insert.equals(taskType)||Constants.astar.equals(taskType)))){
+
+            wrapper2.add(b);
+            if("1".equals(dataset))
+                l = new Label("Larger size.");
+            else
+                l = new Label("More Expensive.");
+            l.setWidth(buttonWidth);
 
 
-
+            wrapper2.add(l);
             if("informed".equals(taskType) && dataInformedFrequenceies!=null && !"".equals(dataInformedFrequenceies)&&dataInformedFrequenceies.contains(",")){
                 String value = frequenceies.get(""+(2*(i-1)));
                 if(value!=null && !"0".equals(value) &&!"".equals(value))
@@ -427,15 +411,9 @@ public class Imageindexwebapp implements EntryPoint {
             }
             fPanelLeft.add(wrapper2);
 
-
-
         }
-        center.clear();
 
 
-
-        center.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-        center.add(fPanelLeft);
     }
     void displayImagesOfAnItem(String radioButtonTitle, String dataitemKey,HashMap<String, String> frequenceies ,String dataItemDetails){
         VerticalPanel  wrapper2 = new VerticalPanel();
@@ -447,16 +425,7 @@ public class Imageindexwebapp implements EntryPoint {
             b.setWidth(buttonWidth);
             b.setTitle(""+radioButtonTitle);
             b.addStyleName("my-button");
-            b.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    // TODO Auto-generated method stub
-                    selectedResult = ( (RadioButton) event.getSource()).getTitle();
-                    System.out.println("hi i was clicked and i am button " +( (RadioButton) event.getSource()).getTitle());
-                    showConfirmMessageBox();
-                }
-            });
+            b.addClickHandler(userSelectionHandler);
 
             image = new Image("squareimages/("+dataitemKey+").jpg");
             image.setHeight(buttonWidth);
@@ -466,16 +435,7 @@ public class Imageindexwebapp implements EntryPoint {
             System.out.println("test title is "+button.getTitle());
             button.setHeight(buttonWidth);
             button.setWidth(buttonWidth);
-            button.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    // TODO Auto-generated method stub
-                    selectedResult = ( (PushButton) event.getSource()).getTitle();
-                    System.out.println("Result selected as button " +( (PushButton) event.getSource()).getTitle());
-                    showConfirmMessageBox();
-                }
-            });
+            button.addClickHandler(userSelectionHandler);
             button.addStyleName("my-button");
             wrapper2.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
             wrapper2.add(b);
@@ -490,63 +450,32 @@ public class Imageindexwebapp implements EntryPoint {
         }
         else{
             String []ss = dataItemDetails.split("'");
-            //showMessageBox("hi"+dataItemsDetails);
             VerticalPanel hPanel = new VerticalPanel();
-
-            //hPanel.setSpacing(5);
-
-            // errorLabel.setText(dataItemsDetailsList[i-1]);
             Label l = new Label();
             l.setText("     ");
             Label l2 = new Label();
             l2.setWidth(buttonWidth);
             l2.setText(ss[2]);
-            //    fPanelLeft.add(l);
             b = new RadioButton("radioGroup","         ");
             b.setHeight(smallButtonWidth);
             b.setWidth(buttonWidth);
             b.setTitle(""+radioButtonTitle);
             b.addStyleName("my-button");
-            b.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    // TODO Auto-generated method stub
-                    selectedResult = ( (RadioButton) event.getSource()).getTitle();
-                    System.out.println("hi i was clicked and i am button " +( (RadioButton) event.getSource()).getTitle());
-                    showConfirmMessageBox();
-                }
-            });
+            b.addClickHandler(userSelectionHandler);
             hPanel.add(new HTML(""));
             hPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
             hPanel.add(b);
-
-            // hPanel.add(l2);
-            //  hPanel.setBorderWidth(1);
-
             for (int j = 0; j < new Integer( ss[0])  &&j<4; j++) {
                 image = new Image("data/Image_"+dataitemKey+"/("+dataitemKey+"_"+j+").jpg");
                 image.setHeight(buttonWidth);
                 image.setWidth(buttonWidth);
                 PushButton b2 = new PushButton(image);
                 b2.setTitle(""+radioButtonTitle);
-
                 b2.setHeight(buttonWidth);
                 b2.setWidth(buttonWidth);
-                b2.addClickHandler(new ClickHandler() {
-
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        // TODO Auto-generated method stub
-                        selectedResult = ( (PushButton) event.getSource()).getTitle();
-                        System.out.println("Result selected as button " +( (PushButton) event.getSource()).getTitle());
-                        showConfirmMessageBox();
-                    }
-                });
+                b2.addClickHandler(userSelectionHandler);
                 hPanel.add(b2);
-
             }
-
             if("informed".equals(taskType) && dataInformedFrequenceies!=null && !"".equals(dataInformedFrequenceies)&&dataInformedFrequenceies.contains(",")){
                 String value = frequenceies.get(""+radioButtonTitle);
                 if(value!=null && !"0".equals(value) &&!"".equals(value))
@@ -554,15 +483,11 @@ public class Imageindexwebapp implements EntryPoint {
 
             }
             fPanelLeft.add(hPanel);
-
-
         }
-
-
-
     }
-    void showMessageBox(String text){
 
+
+    void showMessageBox(String text){
         serverResponseLabel.setHTML(new SafeHtmlBuilder().appendEscapedLines(text).toSafeHtml());
         dialogBox.center();
         closeButton.setFocus(true);
@@ -658,15 +583,6 @@ public class Imageindexwebapp implements EntryPoint {
 
                 b2.setHeight(buttonWidth);
                 b2.setWidth(buttonWidth);
-                b2.addClickHandler(new ClickHandler() {
-
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        // TODO Auto-generated method stub
-                        // selectedResult = ( (PushButton) event.getSource()).getTitle();
-                        //  System.out.println("Result selected as button " +( (PushButton) event.getSource()).getTitle());
-                    }
-                });
                 hPanel.add(b2);
 
             }
@@ -712,7 +628,7 @@ public class Imageindexwebapp implements EntryPoint {
 
             @Override
             public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
+
                 sendResultToServer( selectedResult);
                 System.out.println("Sending results to the server");
             }
@@ -721,7 +637,7 @@ public class Imageindexwebapp implements EntryPoint {
 
             @Override
             public void onKeyUp(KeyUpEvent event) {
-                // TODO Auto-generated method stub
+
                 if(event.getNativeKeyCode() == 32){
                     sendResultToServer( selectedResult);
                     System.out.println("Sending results to the server");
@@ -784,11 +700,15 @@ public class Imageindexwebapp implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        // Create a CellTable.
-        //  errorLabel.setText("test");
+        userSelectionHandler = new ClickHandler() {
 
-        //  addVerticalFlowPanelleft() ;
-        //  addVerticalFlowPanelRight();
+            @Override
+            public void onClick(ClickEvent event) {
+                selectedResult = ( (RadioButton) event.getSource()).getTitle();
+                System.out.println("hi i was clicked and i am button " +( (RadioButton) event.getSource()).getTitle());
+                showConfirmMessageBox();
+            }
+        };
         progress=0;
         bar = new ProgressBar(0, Constants.MaxUserTasks,0);
         FlowPanel p = new FlowPanel();
@@ -917,7 +837,7 @@ public class Imageindexwebapp implements EntryPoint {
 
                         @Override
                         public void onFailure(Throwable caught) {
-                            // TODO Auto-generated method stub
+                            //TODO report an error on the scree
 
                         }
 
@@ -1112,9 +1032,6 @@ public class Imageindexwebapp implements EntryPoint {
         serverResponseLabel = new HTML();
         VerticalPanel dialogVPanel = new VerticalPanel();
         dialogVPanel.addStyleName("dialogVPanel");
-        //        dialogVPanel.add(new HTML("<b>Sending name to the server:</b>"));
-        //        dialogVPanel.add(textToServerLabel);
-        //        dialogVPanel.add(new HTML("<br><b>Server replies:</b>"));
         dialogVPanel.add(serverResponseLabel);
         dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
         dialogVPanel.add(closeButton);
@@ -1125,8 +1042,6 @@ public class Imageindexwebapp implements EntryPoint {
             @Override
             public void onClick(ClickEvent event) {
                 dialogBox.hide();
-                // getTaskButton.setEnabled(true);
-                //   getTaskButton.setFocus(true);
             }
         });
 
@@ -1223,7 +1138,6 @@ public class Imageindexwebapp implements EntryPoint {
         });
     }
     void buildTaskDoneMessageBox(){
-
         tasksDoneBox  = new DialogBox();
         tasksDoneBox.setText("Survery done.");
         tasksDoneBox.setAnimationEnabled(true);
@@ -1257,13 +1171,20 @@ public class Imageindexwebapp implements EntryPoint {
         retake.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                // TODO
-                /*
-                 * Reset the tasks
-                 * Reinitiate tasks for the worker
-                 * 
-                 * 
-                 * */
+                greetingService.resetUserTasks(userId, new AsyncCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        errorLabel.setText(result);
+                        bar.setProgress(0.0);
+                        progress=0;
+
+                    }
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        errorLabel.setText(caught.getMessage());
+
+                    }
+                });
                 tasksDoneBox.hide();
 
             }

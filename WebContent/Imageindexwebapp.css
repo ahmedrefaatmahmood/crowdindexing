@@ -85,6 +85,11 @@ margin-right:auto;
 
   
 }
+.blankImage  {
+	hight:1.5em;
+	width:10em;
+	 border: blank;
+}
 .centerplacement  {
 	margin-left:auto;
 	margin-right:auto;
