@@ -11,7 +11,7 @@
   <welcome-file-list>
     <welcome-file>Imageindexwebapp.html</welcome-file>
   </welcome-file-list>
-  <servlet>
+  <!-- <servlet>
     <servlet-name>SystemServiceServlet</servlet-name>
     <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
     <init-param>
@@ -22,5 +22,5 @@
   <servlet-mapping>
     <servlet-name>SystemServiceServlet</servlet-name>
     <url-pattern>/_ah/spi/*</url-pattern>
-  </servlet-mapping>
+  </servlet-mapping> -->
 </web-app>
