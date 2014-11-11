@@ -164,7 +164,8 @@ public class Imageindexwebapp implements EntryPoint {
                             dataItemsDetails = s[8];
                         }
                         if ("informed".equals(taskType)) {
-                            dataInformedFrequenceies = s[9];
+                            if(s.length>=10)
+                                dataInformedFrequenceies = s[9];
                         }
                         addVerticalFlowPanelText();
                         addVerticalFlowPanelMain();
