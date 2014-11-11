@@ -8,7 +8,7 @@ public   class Constants {
     public static String taskStatusCanceled = "Cancel";
     public static String levelBased = "levelbased" ;
     public static String pathBased = "pathbased" ;
-    public static int defaultReplications =1;
+    public static int defaultReplications =10;
 
 
     //Task Type constanst
@@ -43,7 +43,7 @@ public   class Constants {
 
     public  static  int M = 4;    // max children per B-tree node = M-1
     public  static  int imageRectangleSize = 200;    // max children per B-tree node = M-1
-    public  static  int replicationNum = 1;    // number of replication per query item
+
     //   public static String path = "D://downloads//Animals_with_Attributes//";
     //   public static String path= "E://work//purdue//database//research//Implementation (1)//crowd indexing//squareimages//";
     public static String path= "squareimages";

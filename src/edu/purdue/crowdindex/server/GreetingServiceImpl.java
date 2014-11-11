@@ -43,6 +43,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
     static int dataSet1TestTree = 5;
     static int dataSet2TestTree = 6;
     static int minRep = 1; // it should be 5 or so
+
+    static int testCaseQueryId;
     /**
      * Constructor for the server
      */
@@ -2415,7 +2417,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
         Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
-        int id = 1;
+        testCaseQueryId = 1;
+        int treeId=1;
         String s = "";
         try {
 
@@ -2432,23 +2435,24 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 
             // ----setting up trees -------------------
-            id = 1;
+            treeId = 1;
 
             for (int i = 1; i <= 7; i++) {
-                s = "INSERT INTO crowdindex.indexparam (id,fanout,dataset,descrip)values (" + id
+                s = "INSERT INTO crowdindex.indexparam (id,fanout,dataset,descrip)values (" + treeId
                         + "," + i + ",1,'query')";
                 stmt.execute(s);
-                id++;
-                s = "INSERT INTO crowdindex.indexparam (id,fanout,dataset,descrip)values (" + id
+                treeId++;
+                s = "INSERT INTO crowdindex.indexparam (id,fanout,dataset,descrip)values (" + treeId
                         + "," + i + ",2,'query')";
                 stmt.execute(s);
-                id++;
+                treeId++;
             }
 
 
             // ----Experiment 1 testing insertion perfromance
             // -------------------
-            id = 1;
+
+
             int startId = 0, EndId = 0, repId = 1;
 
             int rep = Constants.defaultReplications;
@@ -2456,90 +2460,44 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
             int [] insertionsForDataSet1 = {1,141,113,99,64,43,36,22,57,78,85,92,134,127,8,15,29,50,126,106}; //spacing 7
             int [] insertionsForDataSet2 = {1051,251,501,701,401,801,901,551,201,1001,51,151,451,651,851,751,951,351,301,101}; //spacing 50
-            id = buildInsertionTestCase(con,stmt,rs,id,rep,insertionsForDataSet1,insertionsForDataSet2,71,601);
+            treeId = buildInsertionTestCase(con,stmt,rs,treeId,rep,insertionsForDataSet1,insertionsForDataSet2,71,601);
             insertionsForDataSet1 = new int [] {113,80,125,92,116,119,101,140,131,95,34,95,83,122,89,104,86,128,107,134}; //spacing 3
             insertionsForDataSet2 = new int []  {820,500,560,700,880,800,900,760,740,640,720,780,840,660,620,580,520,680,860,540}; //spacing 20
-            id = buildInsertionTestCase(con,stmt,rs,id,rep,insertionsForDataSet1,insertionsForDataSet2,110,600);
+            treeId = buildInsertionTestCase(con,stmt,rs,treeId,rep,insertionsForDataSet1,insertionsForDataSet2,110,600);
             // ----Experiment 2 testing replication effect -------------------
-            buildReplicationTestCase(con,stmt,rs,id);
-
-            /*
-             * 
-             * //----Experiment 3 testing fanout effect ------------------- //
-             * id = 1; startId=0;EndId=0; int indexParams []={1,9,10}; startId =
-             * id; for(int fan = 0;fan<indexParams.length;fan++){ for(int i
-             * =1;i<=5;i++){
-             * 
-             * s =
-             * "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
-             * + "values ("+id+","+(i*145/6)+","+indexParams[fan]+
-             * ",'breadth',0,CURRENT_TIMESTAMP,1)"; stmt.execute(s); id++; s =
-             * "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
-             * + "values ("+id+","+(i*145/6)+","+indexParams[fan]+
-             * ",'depth',0,CURRENT_TIMESTAMP,1)"; stmt.execute(s); id++; s =
-             * "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
-             * + "values ("+id+","+(i*145/6)+","+indexParams[fan]+
-             * ",'informed',0,CURRENT_TIMESTAMP,1)"; stmt.execute(s); id++; s =
-             * "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
-             * + "values ("+id+","+(i*145/6)+","+indexParams[fan]+
-             * ",'astar',0,CURRENT_TIMESTAMP,1)"; stmt.execute(s); id++;
-             * 
-             * 
-             * s =
-             * "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
-             * + "values ("+id+","+(i*1150/6 +
-             * 96)+","+(indexParams[fan]+1)+",'breadth',0,CURRENT_TIMESTAMP,2)";
-             * stmt.execute(s); id++; s =
-             * "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
-             * + "values ("+id+","+(i*1150/6 +
-             * 96)+","+(indexParams[fan]+1)+",'depth',0,CURRENT_TIMESTAMP,2)";
-             * stmt.execute(s); id++; s =
-             * "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
-             * + "values ("+id+","+(i*1150/6 +
-             * 96)+","+(indexParams[fan]+1)+",'informed',0,CURRENT_TIMESTAMP,2)"
-             * ; stmt.execute(s); id++; EndId = id; s =
-             * "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
-             * + "values ("+id+","+(i*1150/6 +
-             * 96)+","+(indexParams[fan]+1)+",'astar',0,CURRENT_TIMESTAMP,2)";
-             * stmt.execute(s); id++;
-             * 
-             * }
-             * 
-             * } for(int j=startId;j<=EndId;j++){ s =
-             * "INSERT INTO crowdindex.replicationperlevel (id,level,replication,query)"
-             * + "values ("+repId+",'all',"+10+","+j+")"; stmt.execute(s);
-             * repId++; }
-             */
+            buildReplicationTestCase(con,stmt,rs);
+            //----Experiment 3 testing fanout effect -------------------------
+            //    buildFanoutTestCase(con,stmt,rs);
             // ----Experiment 4 getting expected distance of error
             // -------------------
             // task 1 generating 50 queries and calculating
-            startId = id;
-            for (int k = 1; k <= testQueryNum; k++) {
-
-                s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
-                        + "values ("
-                        + id
-                        + ","
-                        + (k * 140 / (testQueryNum + 1))
-                        + ","
-                        + dataSet1TestTree + ",'test',0,CURRENT_TIMESTAMP,1)";
-                stmt.execute(s);
-                // id++;
-                // s =
-                // "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
-                // +
-                // "values ("+id+","+(k*1150/(testQueryNum+1) +
-                // 96)+","+dataSet2TestTree+",'test',0,CURRENT_TIMESTAMP,2)";
-                // stmt.execute(s);
-                EndId = id;
-                id++;
-            }
-            for (int j = startId; j <= EndId; j++) {
-                s = "INSERT INTO crowdindex.replicationperlevel (id,level,replication,query)"
-                        + "values (" + repId + ",'all'," + testReplication + "," + j + ")";
-                stmt.execute(s);
-                repId++;
-            }
+            //            startId = testCaseQueryId;
+            //            for (int k = 1; k <= testQueryNum; k++) {
+            //
+            //                s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
+            //                        + "values ("
+            //                        + testCaseQueryId
+            //                        + ","
+            //                        + (k * 140 / (testQueryNum + 1))
+            //                        + ","
+            //                        + dataSet1TestTree + ",'test',0,CURRENT_TIMESTAMP,1)";
+            //                stmt.execute(s);
+            // id++;
+            // s =
+            // "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
+            // +
+            // "values ("+id+","+(k*1150/(testQueryNum+1) +
+            // 96)+","+dataSet2TestTree+",'test',0,CURRENT_TIMESTAMP,2)";
+            // stmt.execute(s);
+            //                EndId = testCaseQueryId;
+            //                testCaseQueryId++;
+            //        }
+            //        for (int j = startId; j <= EndId; j++) {
+            //            s = "INSERT INTO crowdindex.replicationperlevel (id,level,replication,query)"
+            //                    + "values (" + repId + ",'all'," + testReplication + "," + j + ")";
+            //            stmt.execute(s);
+            //            repId++;
+            //        }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2556,43 +2514,43 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
      * @param rs
      * @throws SQLException
      */
-    private int buildInsertionTestCase(Connection con, Statement stmt, ResultSet rs,int id,int rep,int [] insertionsForDataSet1,int [] insertionsForDataSet2,int k1,int k2) throws SQLException{
+    private int buildInsertionTestCase(Connection con, Statement stmt, ResultSet rs,int treeid, int rep,int [] insertionsForDataSet1,int [] insertionsForDataSet2,int k1,int k2) throws SQLException{
         // testing insertion for the first data set
         String s="";
 
         //testing insertion with different keys types
-        int insertdataset1id = id;
-        s = "INSERT INTO crowdindex.indexparam (id,fanout,dataset,descrip)values (" + id + ","
+        int insertdataset1id = treeid;
+        s = "INSERT INTO crowdindex.indexparam (id,fanout,dataset,descrip)values (" + treeid + ","
                 + 1 + ",1,'insert')";
         stmt.execute(s);
         s = "INSERT INTO crowdindex.insertionorder (treeid,insertorder,itemid,keyindex)values ("
-                + id + ",1," + k1 + ","+Constants.MAX_KEY_VALUE/2+")";
+                + treeid + ",1," + k1 + ","+Constants.MAX_KEY_VALUE/2+")";
         stmt.execute(s);
-        id++;
-        int insertdataset2id = id;
-        s = "INSERT INTO crowdindex.indexparam (id,fanout,dataset,descrip)values (" + id + ","
+        treeid++;
+        int insertdataset2id = treeid;
+        s = "INSERT INTO crowdindex.indexparam (id,fanout,dataset,descrip)values (" + treeid + ","
                 + 1 + ",2,'insert')";
         stmt.execute(s);
         s = "INSERT INTO crowdindex.insertionorder (treeid,insertorder,itemid,keyindex)values ("
-                + id + ",1," + k2 + ","+Constants.MAX_KEY_VALUE/2+")";
+                + treeid + ",1," + k2 + ","+Constants.MAX_KEY_VALUE/2+")";
         stmt.execute(s);
-        id++;
+        treeid++;
 
-        int startId=id,EndId=id;
+        int startId=testCaseQueryId,EndId=testCaseQueryId;
 
         for (int i:insertionsForDataSet1) {
 
             s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
                     + "values ("
-                    + id
+                    + testCaseQueryId
                     + ","
                     + i
                     + ","
                     + insertdataset1id
                     + ",'insert',0,CURRENT_TIMESTAMP,1)";
             stmt.execute(s);
-            EndId = id;
-            id++;
+            EndId = treeid;
+            testCaseQueryId++;
         }
         // -----------------------------------------------------------------------------------
 
@@ -2602,15 +2560,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
             s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
                     + "values ("
-                    + id
+                    + testCaseQueryId
                     + ","
                     + i
                     + ","
                     + insertdataset2id
                     + ",'insert',0,CURRENT_TIMESTAMP,2)";
             stmt.execute(s);
-            EndId = id;
-            id++;
+            EndId = testCaseQueryId;
+            testCaseQueryId++;
         }
 
         for (int j = startId; j <= EndId; j++) {
@@ -2619,7 +2577,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             stmt.execute(s);
         }
 
-        return id;
+        return treeid;
     }
 
     /**
@@ -2631,79 +2589,79 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
      * @return
      * @throws SQLException
      */
-    private int buildReplicationTestCase(Connection con, Statement stmt, ResultSet rs,int id) throws SQLException{
+    private int buildReplicationTestCase(Connection con, Statement stmt, ResultSet rs) throws SQLException{
         String s="";
         int startId=0,EndId=0;;
         for (int rep = 5; rep <= 20; rep += 5) {
-            startId = id;
+            startId = testCaseQueryId;
             for (int i = 1; i <= 5; i++){
 
                 s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
                         + "values ("
-                        + id
+                        + testCaseQueryId
                         + ","
-                        + (i * 140 / 5)
+                        + (i * 140 / 5-1)
                         + ",5,'breadth',0,CURRENT_TIMESTAMP,1)";
                 stmt.execute(s);
-                id++;
+                testCaseQueryId++;
                 s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
                         + "values ("
-                        + id
+                        + testCaseQueryId
                         + ","
-                        + (i * 140 / 5)
+                        + (i * 140 / 5-1)
                         + ",5,'depth',0,CURRENT_TIMESTAMP,1)";
                 stmt.execute(s);
-                id++;
+                testCaseQueryId++;
                 s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
                         + "values ("
-                        + id
+                        + testCaseQueryId
                         + ","
-                        + (i * 140 / 5)
+                        + (i * 140 / 5-1)
                         + ",5,'informed',0,CURRENT_TIMESTAMP,1)";
                 stmt.execute(s);
-                id++;
+                testCaseQueryId++;
                 s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset,astarUpdateScore)"
                         + "values ("
-                        + id
+                        + testCaseQueryId
                         + ","
-                        + (i * 140 / 5)
+                        + (i * 140 / 5-1)
                         + ",5,'astar',0,CURRENT_TIMESTAMP,1," + Constants.UPDATE_FACTOR + ")";
                 stmt.execute(s);
-                id++;
+                testCaseQueryId++;
 
                 s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
                         + "values ("
-                        + id
+                        + testCaseQueryId
                         + ","
-                        + (i * 1100 / 5 + 96)
+                        + (i * 1100 / 5 + 97)
                         + ",6,'breadth',0,CURRENT_TIMESTAMP,2)";
                 stmt.execute(s);
-                id++;
+                testCaseQueryId++;
                 s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
                         + "values ("
-                        + id
+                        + testCaseQueryId
                         + ","
-                        + (i * 1100 / 5 + 96)
+                        + (i * 1100 / 5 + 97)
                         + ",6,'depth',0,CURRENT_TIMESTAMP,2)";
                 stmt.execute(s);
-                id++;
+                testCaseQueryId++;
                 s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
                         + "values ("
-                        + id
+                        + testCaseQueryId
                         + ","
-                        + (i * 1100 / 5 + 96)
+                        + (i * 1100 / 5 + 97)
                         + ",6,'informed',0,CURRENT_TIMESTAMP,2)";
                 stmt.execute(s);
-                id++;
-                EndId = id;
+                testCaseQueryId++;
+                EndId = testCaseQueryId;
                 s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset,astarUpdateScore)"
                         + "values ("
-                        + id
+                        + testCaseQueryId
                         + ","
-                        + (i * 1100 / 5 + 96)
+                        + (i * 1100 / 5 + 97)
                         + ",6,'astar',0,CURRENT_TIMESTAMP,2," + Constants.UPDATE_FACTOR + ")";
                 stmt.execute(s);
-                id++;
+                testCaseQueryId++;
 
             }
             for (int j = startId; j <= EndId; j++) {
@@ -2713,9 +2671,101 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
             }
         }
-        return id;
+        return testCaseQueryId;
     }
+    /**
+     * 
+     * @param con
+     * @param stmt
+     * @param rs
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+    private int buildFanoutTestCase(Connection con, Statement stmt, ResultSet rs) throws SQLException{
+        String s="";
+        int startId=0,EndId=0;;
+        for (int tree = 1; tree <= 14; tree += 2) {
+            startId = testCaseQueryId;
+            for (int i = 1; i <= 5; i++){
 
+                s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
+                        + "values ("
+                        + testCaseQueryId
+                        + ","
+                        + (i * 140 / 5)
+                        + ","+tree+",'breadth',0,CURRENT_TIMESTAMP,1)";
+                stmt.execute(s);
+                testCaseQueryId++;
+                s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
+                        + "values ("
+                        + testCaseQueryId
+                        + ","
+                        + (i * 140 / 5)
+                        + ","+tree+",'depth',0,CURRENT_TIMESTAMP,1)";
+                stmt.execute(s);
+                testCaseQueryId++;
+                s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
+                        + "values ("
+                        + testCaseQueryId
+                        + ","
+                        + (i * 140 / 5)
+                        + ","+tree+",'informed',0,CURRENT_TIMESTAMP,1)";
+                stmt.execute(s);
+                testCaseQueryId++;
+                s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset,astarUpdateScore)"
+                        + "values ("
+                        + testCaseQueryId
+                        + ","
+                        + (i * 140 / 5)
+                        + ","+tree+",'astar',0,CURRENT_TIMESTAMP,1," + Constants.UPDATE_FACTOR + ")";
+                stmt.execute(s);
+                testCaseQueryId++;
+
+                s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
+                        + "values ("
+                        + testCaseQueryId
+                        + ","
+                        + (i * 1100 / 5 + 96)
+                        + ","+tree+1+",'breadth',0,CURRENT_TIMESTAMP,2)";
+                stmt.execute(s);
+                testCaseQueryId++;
+                s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
+                        + "values ("
+                        + testCaseQueryId
+                        + ","
+                        + (i * 1100 / 5 + 96)
+                        + ","+tree+1+",'depth',0,CURRENT_TIMESTAMP,2)";
+                stmt.execute(s);
+                testCaseQueryId++;
+                s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset)"
+                        + "values ("
+                        + testCaseQueryId
+                        + ","
+                        + (i * 1100 / 5 + 96)
+                        + ","+tree+1+",'informed',0,CURRENT_TIMESTAMP,2)";
+                stmt.execute(s);
+                testCaseQueryId++;
+                EndId = testCaseQueryId;
+                s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset,astarUpdateScore)"
+                        + "values ("
+                        + testCaseQueryId
+                        + ","
+                        + (i * 1100 / 5 + 96)
+                        + ","+tree+1+",'astar',0,CURRENT_TIMESTAMP,2," + Constants.UPDATE_FACTOR + ")";
+                stmt.execute(s);
+                testCaseQueryId++;
+
+            }
+            for (int j = startId; j <= EndId; j++) {
+                s = "INSERT INTO crowdindex.replicationperlevel (level,replication,query)"
+                        + "values ('all'," + Constants.defaultReplications + "," + j + ")";
+                stmt.execute(s);
+
+            }
+        }
+        return testCaseQueryId;
+    }
     @Override
     public String resetUserTasks(String input) throws IllegalArgumentException {
         // reset user task count for the given user id
@@ -3058,28 +3108,20 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
         }
         // step 3 check the direction of backtracking and update the scores of
         // nodes accordingly
-        //TODO when higher backtracking is choosen,
-        //TODO we need to consider the case when
+
         int direction;
         if (maxFreqType == MaxFreqType.HIGHER_BACKTRACKING) {
-            //  if (level != treeHeight) {
+
             direction = Constants.DIRECTION_HIGHER;
             nodeKeyIndex = Integer.parseInt(itemsList[itemsList.length-1]);
             updateAstarScore(con, stmt, rs, queryId, direction, updateFactor, nodeKeyIndex);
-            // } else {
-            // return new
-            // ServerSideQueryAnswer(Double.parseDouble(itemsList[itemsList.length-1]),
-            // Integer.parseInt(Constants.MAX_SUBTREE_KEY));
-            // }
 
         } else if (maxFreqType == MaxFreqType.SMALLER_BACKTRACKING) {
-            //   if (level != treeHeight) {
+
             direction = Constants.DIRECTION_LOWER;
             nodeKeyIndex = Integer.parseInt(itemsList[1]);
             updateAstarScore(con, stmt, rs, queryId, direction, updateFactor, nodeKeyIndex);
-            //            } else {
-            //                return new ServerSideQueryAnswer(Double.parseDouble(itemsList[1]), Integer.parseInt(Constants.MIN_SUBTREE_KEY));
-            //            }
+
         }
         return null;
 
