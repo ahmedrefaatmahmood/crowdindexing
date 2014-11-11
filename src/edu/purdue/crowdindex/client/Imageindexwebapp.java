@@ -101,8 +101,7 @@ public class Imageindexwebapp implements EntryPoint {
      * returns an error.
      */
     private static final String SERVER_ERROR = "An error occurred while "
-            + "attempting to contact the server. Please check your network "
-            + "connection and try again.";
+            + "attempting to contact the server.";
 
     /**
      * Create a remote service proxy to talk to the server-side Greeting
@@ -1127,7 +1126,7 @@ public class Imageindexwebapp implements EntryPoint {
 
                         @Override
                         public void onFailure(Throwable caught) {
-                            // TODO report an error on the scree
+                            errorLabel.setText(SERVER_ERROR);
 
                         }
 
@@ -1165,7 +1164,7 @@ public class Imageindexwebapp implements EntryPoint {
 
                         @Override
                         public void onFailure(Throwable caught) {
-                            // TODO Auto-generated method stub
+                            errorLabel.setText("Error in sign up");
 
                         }
                     });
@@ -1223,8 +1222,7 @@ public class Imageindexwebapp implements EntryPoint {
                                     @Override
                                     public void onFailure(
                                             Throwable caught) {
-                                        // TODO Auto-generated
-                                        // method stub
+                                        errorLabel.setText("Error in getting the number of avaible tasks ");
 
                                     }
 
@@ -1283,13 +1281,13 @@ public class Imageindexwebapp implements EntryPoint {
 
                     @Override
                     public void onSuccess(String result) {
-                        // TODO Auto-generated method stub
+                        errorLabel.setText("System reset sucessfully");
 
                     }
 
                     @Override
                     public void onFailure(Throwable caught) {
-                        // TODO Auto-generated method stub
+                        errorLabel.setText("Error reseting the system");
 
                     }
                 });
