@@ -52,7 +52,8 @@ h1 {
 #left {
 	margin-left:auto;
 margin-right:auto;
- width: 70%;  
+width: 56em; 
+ /*width: 70%;*/  
   /* float: left;
    width: 46.5%;
    margin: 1% 0 1% 1%;
@@ -77,7 +78,7 @@ margin-right:auto;
 	margin-right:auto;
 	width:70%;
  	font-weight: bold;
-  
+  	clear:both;
 }
 .my-button  {
 	margin-left:auto;
@@ -90,10 +91,265 @@ margin-right:auto;
 	width:10em;
 	 border: blank;
 }
+.blankImageSmall  {
+	hight:1.5em;
+	width:1.5em;
+	 border: blank;
+}
 .centerplacement  {
 	margin-left:auto;
 	margin-right:auto;
 	width:50%;
+}
+
+#query-wrapper {
+	margin-left:auto;
+	margin-right:auto;
+	width:42em;
+	height:11em;
+}
+
+.query-image {
+	float:left;
+	position:relative;
+	padding:0em;
+}
+
+#query-scroll-left{
+	float:left;	
+	width:1em;
+	height:1em;
+	margin:auto;
+	padding:0em;
+}
+
+#query-scroll-left .html-face{
+	width:1em;
+	height:1em;
+	margin:auto;
+	display: block;
+	vertical-align: middle;
+	position: relative;
+	top: 4em;	
+}
+
+#query-scroll-right{
+	float:left;	
+	width:1em;
+	height:1em;
+	margin:auto;
+	padding:0em;
+}
+
+#query-scroll-right .html-face{
+	width:1em;
+	height:1em;
+	margin:auto;
+	display: block;
+	vertical-align: middle;
+	position: relative;
+	top: 4em;
+}
+
+#query-content-view{
+	float:left;
+	overflow: hidden;
+	height: 11em;
+	width: 33em;
+}
+#query-content {
+	position:relative;
+	left:0em;
+	width:33em;
+	margin: auto;
+}
+
+#answer-wrapper-view{
+	float:left;
+	overflow-x: hidden;	
+	overflow-y: visible;	
+	width: 50em;
+}
+
+#answer-wrapper {
+	position: relative;
+	left: 0em;
+	width:600em;
+	/*height: 160px;*/
+}
+
+.image-answer-item {
+	float:left;
+	position:relative;
+	padding:0em;
+	overflow: hidden;
+	/*height: 160px;*/
+	/*height: 40em;*/
+	width:11em;
+}
+
+.hidden {
+	display: none;
+}
+
+.first-answer-item {
+	float:left;
+	position:relative;
+	padding:0em;
+	width:11em;
+	height: 11em;	
+}
+
+.first-answer-item .gwt-Label {
+	margin: auto;
+	text-align: center;
+}
+
+.last-answer-item {
+	float:left;
+	position:relative;
+	padding:0em;
+	width:11em;
+	height: 11em;	
+}
+
+.last-answer-item .gwt-Label {
+	margin: auto;
+	text-align: center;
+}
+
+.separator-answer-item {
+	float:left;
+	position:relative;
+	padding:0em;
+	width: 4.5em;
+	height: 14em;
+	overflow: hidden;
+}
+
+.separator-answer-item span{
+	width: 1em;
+	position: relative;
+	height: 1em;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.separator-answer-item img{
+height: 40em;
+width: 3em;
+margin-left: auto;
+margin-right: auto;
+}
+
+.tn-toggle-imgs {
+	float:left;	
+	width:10em;
+	height:2em;
+	margin:auto;
+	padding:0em;
+}
+
+.tn-toggle-imgs .html-face {
+	width:1em;
+	height:1em;
+	margin:auto;
+	display: block;
+	position: relative;
+}
+
+
+#tn-scroll-left{
+	float:left;	
+	width:2em;
+	height:14em;
+	margin:auto;
+	padding:0em;
+}
+
+#tn-scroll-left .html-face{
+	width:1em;
+	height:1em;
+	margin:auto;
+	display: block;
+	vertical-align: middle;
+	position: relative;
+	top: 6.6em;	
+}
+
+#tn-scroll-right{
+	float:left;	
+	width:2em;
+	height:14em;
+	margin:auto;
+	padding:0em;
+}
+
+#tn-scroll-right .html-face{
+	width:1em;
+	height:1em;
+	margin:auto;
+	display: block;
+	vertical-align: middle;
+	position: relative;
+	top: 6.6em;
+}
+
+#top {
+	height: 6em;
+	background-color: black;
+}
+
+#top *{
+	float:left;
+	position: relative;
+	display:block;	
+}
+
+#info-top {
+	padding-left: 3em;
+	padding-top: 1em;
+}
+#info-top * {
+	float:none;
+}
+
+.top-text {
+	color: white;
+}
+
+#top .appName {
+	font-size: 2em;
+	padding-top: 1em;
+	padding-left: 1em;
+	padding-right: 3em;
+}
+#getTaskButtonContainer {
+	padding-top: 3em;
+	padding-left: 1em;
+	padding-right: 1em;
+
+}
+
+#resetButtonContainer {
+	padding-top: 3em;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+
+.select-option {
+	height: 3em;
+	width: 3em;
+	margin: auto;
+}
+
+/*.select-option * {
+	float:left;
+}
+*/
+.gwt-PushButton {
+	padding:0em;
 }
 
 .clear {
@@ -110,7 +366,7 @@ margin-right:auto;
   border-bottom: 2px solid #848280;
   background-color: #AAAAAA;
   height: 14pt;
-  width: 50%;
+  /*width: 50%;*/
 }
 .gwt-ProgressBar-shell .gwt-ProgressBar-bar {
   background-color: #67A7E3;
