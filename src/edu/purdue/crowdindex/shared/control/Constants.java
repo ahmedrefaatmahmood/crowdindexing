@@ -9,7 +9,13 @@ public   class Constants {
     public static String levelBased = "levelbased" ;
     public static String pathBased = "pathbased" ;
     public static int defaultReplications =10;
-
+    //Test tasks paramters for selection of expected distance error and hence the number of replications
+    public static int minimumNumberReplicationsForProbablisticQueries =3;
+    public static int maxNumberReplicationsForProbablisticQueries =15;
+    public static int testOrdertForProbalisticQueries =3;
+    public static int numberOfProbalisticQueries =3;
+    public static int dataSet1TestTreeForProbalisticQueries = 5;
+    public static int dataSet2TestTreeForProbalisticQueries = 6;
 
     //Task Type constanst
     public static String astar = "astar";
@@ -41,19 +47,18 @@ public   class Constants {
     public static String Unselected_item = "unseleceted" ;
     public  static  int MAX_NODE_RANGE= 20000;
 
+    //UI constants
+    public static int MaxUserTasks=100;
+
+    //TODO Obsoloete core to be removed
     public  static  int M = 4;    // max children per B-tree node = M-1
     public  static  int imageRectangleSize = 200;    // max children per B-tree node = M-1
-
-    //   public static String path = "D://downloads//Animals_with_Attributes//";
-    //   public static String path= "E://work//purdue//database//research//Implementation (1)//crowd indexing//squareimages//";
     public static String path= "squareimages";
     //   public static String queryModel = pathBased;  //node based or level based
     public static String queryModel = levelBased;  //node based or level based
 
+    static final int MaxReplications = 3;
 
-    public static final int MaxReplications = 3;
-
-    public static int MaxUserTasks=50;
 
 
 

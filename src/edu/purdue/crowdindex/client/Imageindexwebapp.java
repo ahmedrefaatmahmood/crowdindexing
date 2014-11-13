@@ -84,6 +84,7 @@ public class Imageindexwebapp implements EntryPoint {
     Button test;
     String userId;
     Label errorLabel;
+    Label taskInfoLabel;
     Label taskAvailableLable;
 
     ProgressBar bar;
@@ -162,20 +163,30 @@ public class Imageindexwebapp implements EntryPoint {
                         if ("2".equals(dataset)) {
                             dataItemsDetails = s[8];
                         }
+                        else
+                            dataItemsDetails=null;
                         if ("informed".equals(taskType)) {
                             if(s.length>=10)
                                 dataInformedFrequenceies = s[9];
+                            else
+                                dataInformedFrequenceies=null;
                         }
+                        else
+                            dataInformedFrequenceies = null;
+
+                        taskInfoLabel.setText("Task id:"+taskId+" Task type:"+taskType+" Equality:"+equality);
                         addVerticalFlowPanelText();
                         addVerticalFlowPanelMain();
                     } else {
                         errorLabel.setText(result);
+                        taskInfoLabel.setText("");
                     }
                 }
             });
         } else {
             errorLabel
             .setText("Please submit the result of the previous task first");
+            taskInfoLabel.setText("");
         }
     }
 
@@ -361,7 +372,7 @@ public class Imageindexwebapp implements EntryPoint {
         if (i == dataiTemslist.length - 1 && taskType.equals(Constants.astar)) {
             button.setTitle("" + Constants.MAX_SUBTREE_KEY);
         }
-        System.out.println("test title is " + button.getTitle());
+        // System.out.println("test title is " + button.getTitle());
         button.setHeight(buttonWidth);
         button.setWidth(buttonWidth);
         if ((("" + Constants.equality_true).equals(equality) || "0"
@@ -533,7 +544,7 @@ public class Imageindexwebapp implements EntryPoint {
         if (i == dataiTemslist.length - 1 && taskType.equals(Constants.astar)) {
             b.setTitle("" + Constants.GREATER_THAN_SUBTREE);
         }
-        System.out.println("test title is " + b.getTitle());
+        // System.out.println("test title is " + b.getTitle());
         b.addStyleName("my-button");
         b.addClickHandler(userSelectionHandler);
         Image im = new Image("title/seperator.jpg");
@@ -637,7 +648,7 @@ public class Imageindexwebapp implements EntryPoint {
             image.setWidth(buttonWidth);
             PushButton button = new PushButton(image);
             button.setTitle("" + radioButtonTitle);
-            System.out.println("test title is " + button.getTitle());
+            //System.out.println("test title is " + button.getTitle());
             button.setHeight(buttonWidth);
             button.setWidth(buttonWidth);
             button.addClickHandler(userSelectionHandler);
@@ -735,16 +746,16 @@ public class Imageindexwebapp implements EntryPoint {
 
         b2.setHeight(buttonWidth);
         b2.setWidth(buttonWidth);
-        b2.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
-                // selectedResult = ( (PushButton)
-                // event.getSource()).getTitle();
-                // System.out.println("Result selected as button " +(
-                // (PushButton) event.getSource()).getTitle());
-            }
-        });
+        //        b2.addClickHandler(new ClickHandler() {
+        //            @Override
+        //            public void onClick(ClickEvent event) {
+
+        //                // selectedResult = ( (PushButton)
+        //                // event.getSource()).getTitle();
+        //                // System.out.println("Result selected as button " +(
+        //                // (PushButton) event.getSource()).getTitle());
+        //            }
+        //        });
         return b2;
     }
 
@@ -910,7 +921,7 @@ public class Imageindexwebapp implements EntryPoint {
 
         }
 
-        System.out.println(dataset);
+        // System.out.println(dataset);
 
         SimplePanel wrapper2 = new SimplePanel();
         PushButton b2 = new PushButton("Submit Result..");
@@ -923,7 +934,7 @@ public class Imageindexwebapp implements EntryPoint {
             public void onClick(ClickEvent event) {
 
                 sendResultToServer(selectedResult);
-                System.out.println("Sending results to the server");
+                //System.out.println("Sending results to the server");
             }
         });
         b2.addKeyUpHandler(new KeyUpHandler() {
@@ -933,7 +944,7 @@ public class Imageindexwebapp implements EntryPoint {
 
                 if (event.getNativeKeyCode() == 32) {
                     sendResultToServer(selectedResult);
-                    System.out.println("Sending results to the server");
+                    //System.out.println("Sending results to the server");
                 }
 
             }
@@ -998,8 +1009,8 @@ public class Imageindexwebapp implements EntryPoint {
             @Override
             public void onClick(ClickEvent event) {
                 selectedResult = ((RadioButton) event.getSource()).getTitle();
-                System.out.println("hi i was clicked and i am button "
-                        + ((RadioButton) event.getSource()).getTitle());
+                //                System.out.println("hi i was clicked and i am button "
+                //                        + ((RadioButton) event.getSource()).getTitle());
                 showConfirmMessageBox();
             }
         };
@@ -1057,6 +1068,7 @@ public class Imageindexwebapp implements EntryPoint {
         test = new Button("test");
 
         errorLabel = new Label();
+        taskInfoLabel = new Label();
 
         taskAvailableLable = new Label();
 
@@ -1082,6 +1094,7 @@ public class Imageindexwebapp implements EntryPoint {
         // Add the nameField and getTaskButton to the RootPanel
         // Use RootPanel.get() to get the entire body element
         RootPanel.get("errorLabelContainer").add(errorLabel);
+        RootPanel.get("taskInfoContainer").add(taskInfoLabel);
         RootPanel.get("taskAvailabilityLabelContainer").add(taskAvailableLable);
 
         RootPanel.get("nameFieldContainer").add(nameField);
@@ -1312,7 +1325,7 @@ public class Imageindexwebapp implements EntryPoint {
 
                     @Override
                     public void onFailure(Throwable caught) {
-                        // TODO Auto-generated method stub
+
 
                     }
                 });
