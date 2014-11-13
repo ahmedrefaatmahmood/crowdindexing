@@ -13,6 +13,7 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -41,6 +42,7 @@ public class Imageindexwebapp implements EntryPoint {
     private static String buttonWidth = "10em";
     private static String longseperator = "40em";
     private static String smallButtonWidth = "3em";
+    private static int MAX_DISPLAY_ITEM = 11;
     String taskId;
     String queryId;
     String queryItem;
@@ -57,7 +59,8 @@ public class Imageindexwebapp implements EntryPoint {
 
     HorizontalPanel fPanelMiddle;
     FlowPanel fPanelRight;
-    HorizontalPanel center;
+//    HorizontalPanel center;
+    RootPanel center;
     String selectedResult;
     Label textToServerLabel;
     boolean resultSend;
@@ -83,6 +86,7 @@ public class Imageindexwebapp implements EntryPoint {
     Button signUpButton;
     Button test;
     String userId;
+    String userName= "Login Error!!!";
     Label errorLabel;
     Label taskInfoLabel;
     Label taskAvailableLable;
@@ -250,32 +254,44 @@ public class Imageindexwebapp implements EntryPoint {
         FlowPanel answerWrapperView = new FlowPanel();
         answerWrapperView.getElement().setId("answer-wrapper-view");
         answerWrapperView.add(answerWrapper);
+        int w = dataiTemslist.length;
+//        int w = (dataiTemslist.length-1)/2;
+//        Window.alert("dataitemlist length = "+dataiTemslist.length+", w = "+w);
+        if (w > MAX_DISPLAY_ITEM) {
+            // create arrow buttons
+            PushButton scrollLeft = new PushButton(" ");
+            scrollLeft.getElement().setId("tn-scroll-left");
+            scrollLeft.setHTML("<span class=\"fa fa-chevron-left\"></span>");
+            scrollLeft.addClickHandler(new ClickHandler() {
 
-        // create arrow buttons
-        PushButton scrollLeft = new PushButton(" ");
-        scrollLeft.getElement().setId("tn-scroll-left");
-        scrollLeft.setHTML("<span class=\"fa fa-chevron-left\"></span>");
-        scrollLeft.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    js_slideLeftAnswerContent();
+                }
+            });
 
-            @Override
-            public void onClick(ClickEvent event) {
-                js_slideLeftAnswerContent();
-            }
-        });
+            PushButton scrollRight = new PushButton(" ");
+            scrollRight.getElement().setId("tn-scroll-right");
+            scrollRight.setHTML("<span class=\"fa fa-chevron-right\"></span>");
+            scrollRight.addClickHandler(new ClickHandler() {
 
-        PushButton scrollRight = new PushButton(" ");
-        scrollRight.getElement().setId("tn-scroll-right");
-        scrollRight.setHTML("<span class=\"fa fa-chevron-right\"></span>");
-        scrollRight.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    js_slideRightAnswerContent();
+                }
+            });
+            
+            fPanelLeft.getElement().setId("asnwer-container");        
+            fPanelLeft.add(scrollLeft);
+            fPanelLeft.add(answerWrapperView);
+            fPanelLeft.add(scrollRight);
+        	
+        }
+        else{
+        	fPanelLeft.getElement().setId("asnwer-container");        
+            fPanelLeft.add(answerWrapperView);
+        }
 
-            @Override
-            public void onClick(ClickEvent event) {
-                js_slideRightAnswerContent();
-            }
-        });
-        fPanelLeft.add(scrollLeft);
-        fPanelLeft.add(answerWrapperView);
-        fPanelLeft.add(scrollRight);
         center.add(fPanelLeft);
 
         // center.clear();
@@ -1051,19 +1067,20 @@ public class Imageindexwebapp implements EntryPoint {
         fPanelMiddle.add(wrapper);
 
         fPanelRight = new FlowPanel();
-        center = new HorizontalPanel();
-
-        RootPanel.get("left").add(center);
+//        center = new HorizontalPanel();
+//        center = new FlowPanel();
+        center = RootPanel.get("left");
+//        RootPanel.get("left").add(center);
         registerUserButton = new Button("Log in");
         getTaskButton = new Button(
-                "<i class=\"fa fa-file-image-o fa-lg\"></i> Get task");
+                "<i class=\"fa fa-step-forward fa-lg\"></i> <span>Get task</span>");
         nameField = new TextBox();
         nameField.setText("");
         passwordField = new PasswordTextBox();
         passwordField.setVisible(true);
         passwordField.setText("");
         passwordField.setWidth("10em");
-        resetButton = new Button("<i class=\"fa fa-times fa-lg\"></i> Reset");
+        resetButton = new Button("<i class=\"fa fa-times fa-lg\"></i> <span>Reset</span>");
         signUpButton = new Button();
         test = new Button("test");
 
@@ -1146,8 +1163,7 @@ public class Imageindexwebapp implements EntryPoint {
                         @Override
                         public void onSuccess(String result) {
                             String[] s = result.split(",");
-                            taskAvailableLable.setText(s[0]
-                                    + " tasks avaiable");
+                            updateTaskAvailableLabel(s);
                         }
 
                     });
@@ -1215,8 +1231,10 @@ public class Imageindexwebapp implements EntryPoint {
                                 registerUserButton.setVisible(false);
                                 nameField.setVisible(false);
                                 passwordField.setVisible(false);
+                                userName = nameField.getText();
                                 userId = s[1];
-                                errorLabel.setText(result);
+                                errorLabel.addStyleName("error-label");
+//                                errorLabel.setText(result);
                                 if ("1".equals(userId)) {
                                     resetButton.setVisible(true);
                                 } else {
@@ -1242,11 +1260,9 @@ public class Imageindexwebapp implements EntryPoint {
                                     @Override
                                     public void onSuccess(
                                             String result) {
-                                        String[] s = result
-                                                .split(",");
-                                        taskAvailableLable
-                                        .setText(s[0]
-                                                + " tasks avaiable");
+                                        String[] s = result.split(",");
+                                        // Set label for avaiable tasks
+                                        setTaskAvailableLabel(s);
                                         // bar1.setText(result+" tasks avaiable");
                                         bar.setProgress(Integer
                                                 .parseInt(s[1]));
@@ -1504,5 +1520,21 @@ public class Imageindexwebapp implements EntryPoint {
         });
 
     }
+
+	/**
+	 * @param s
+	 */
+	private void setTaskAvailableLabel(String[] s) {
+		taskAvailableLable.getElement().setInnerHTML("<p> Welcome <span class=\"user-name\" >"
+				+ userName
+				+ "</span>, there are <span id=\"task-count\">"+s[0]+"</span> tasks avaiable</p>");
+	}
+	
+	/**
+	 * @param s
+	 */
+	private void updateTaskAvailableLabel(String[] s) {
+		DOM.getElementById("task-count").setInnerHTML(s[0]);		
+	}
 
 }
