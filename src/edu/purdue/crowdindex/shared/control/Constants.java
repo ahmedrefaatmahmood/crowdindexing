@@ -9,11 +9,12 @@ public   class Constants {
     public static String levelBased = "levelbased" ;
     public static String pathBased = "pathbased" ;
     public static int defaultReplications =10;
+    public static int numberOfTestQueries=4;
     //Test tasks paramters for selection of expected distance error and hence the number of replications
     public static int minimumNumberReplicationsForProbablisticQueries =3;
     public static int maxNumberReplicationsForProbablisticQueries =15;
     public static int testOrdertForProbalisticQueries =3;
-    public static int numberOfProbalisticQueries =3;
+    public static int numberOfProbalisticQueries =4;
     public static int dataSet1TestTreeForProbalisticQueries = 5;
     public static int dataSet2TestTreeForProbalisticQueries = 6;
 
