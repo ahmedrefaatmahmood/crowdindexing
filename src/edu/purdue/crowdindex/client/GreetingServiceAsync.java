@@ -10,8 +10,8 @@ public interface GreetingServiceAsync {
             throws IllegalArgumentException;
     void returnResult(String input, AsyncCallback<String> callback)
             throws IllegalArgumentException;
-    void printQueryResults(String input, AsyncCallback<String> callback)
-            throws IllegalArgumentException;
+    //    void printQueryResults(String input, AsyncCallback<String> callback)
+    //            throws IllegalArgumentException;
     void registerUser(String input, AsyncCallback<String> callback)
             throws IllegalArgumentException;
     void reset( String input,AsyncCallback<String> callback)

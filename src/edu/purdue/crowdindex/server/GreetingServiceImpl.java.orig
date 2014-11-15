@@ -1,5 +1,11 @@
 package edu.purdue.crowdindex.server;
 
+<<<<<<< HEAD
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+=======
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -7,7 +13,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+<<<<<<< HEAD
+import java.util.Random;
+=======
 import java.util.HashMap;
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
 import java.util.logging.Logger;
 
 import com.google.appengine.api.utils.SystemProperty;
@@ -26,8 +36,16 @@ import edu.purdue.crowdindex.workersimulation.TraversalStrategy.MaxFreqType;
  * breadth,depth,informed,astar,test,unlimited?
  */
 @SuppressWarnings("serial")
+<<<<<<< HEAD
+public class GreetingServiceImpl extends RemoteServiceServlet implements
+GreetingService {
+	
+	Logger log = Logger.getLogger(this.getClass().getName());
+	
+=======
 public class GreetingServiceImpl extends RemoteServiceServlet implements GreetingService {
     Logger log = Logger.getLogger(this.getClass().getName());
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
     boolean indexBuild;
     ArrayList<BTree<Integer, String>> st;
     HashMap<Integer, HashMap<Integer,Integer>> keyValueMapForRandomInsertions;
@@ -54,12 +72,44 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
         indexBuild = true;
 
     }
+<<<<<<< HEAD
+    
+    
+    public static String getStackTrace(Throwable aThrowable) {
+        Writer result = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(result);
+        aThrowable.printStackTrace(printWriter);
+        return result.toString();
+      }
+    
+    void writeToFile(String s){
+    	log.info(s);
+//        FileWriter fstream;
+//        try {
+//            fstream = new FileWriter("AR_Logging.txt");
+//
+//            BufferedWriter out2 = new BufferedWriter(fstream);
+//            // PrintWriter out2 = new PrintWriter(new BufferedWriter(new FileWriter(, true)));
+//
+//            //out2.println(s);
+//            out2.write(s);
+//
+//            out2.close();
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//            writeToFile(e.getMessage());
+//            writeToFile(getStackTrace(e));
+//        }
+
+=======
     /**
      * This function is for basic logic and should be replaced
      * @param s
      */
     void writeToFile(String s) {
         log.info(s);
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
     }
     /**
      * read the configuration from the database if reset is
@@ -90,9 +140,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                 reset();
             }
         } catch (Exception e) {
+<<<<<<< HEAD
+
+            e.printStackTrace(new PrintWriter(System.out));
+=======
             e.printStackTrace();
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
 
         } finally {
             closeEveryThing(con, stmt, rs);
@@ -120,14 +175,25 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             stmt = con.createStatement();
             String statment = "delete from crowdindex.task;" + "delete from crowdindex.taskgroup;"
                     + "delete from crowdindex.backtrack;"
+<<<<<<< HEAD
+                    + "delete from crowdindex.expecteddistanceerror;"
+                    + "delete from crowdindex.taskgroupusers ;";// +
+            // "update crowdindex.query set solved = 0,retreivedpath=null,responsetime = null,retrievedresult=null,solvedsofar=0,depthpaths=null,totalDecisionDepth=null ;";
+=======
                     + "delete from crowdindex.expectedDistanceError;"
                     + "delete from crowdindex.taskgroupusers ;";
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
             stmt.execute(statment);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
+<<<<<<< HEAD
+            writeToFile(getStackTrace(e));
+            // connectToDB();
+=======
             writeToFile(e.getStackTrace().toString());
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -185,16 +251,27 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                             + "' where  id =" + S[0] + "  ;");
                 } catch (SQLException e) {
 
-                    e.printStackTrace();
+                    e.printStackTrace(new PrintWriter(System.out));
                     writeToFile(e.getMessage());
+<<<<<<< HEAD
+                    writeToFile(getStackTrace(e));
+                    connectToDB();
+=======
                     writeToFile(e.getStackTrace().toString());
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
                 }
             }
             generateTasks(con, stmt, rs, queryList);
         } catch (Exception e) {
             writeToFile(e.getMessage());
+<<<<<<< HEAD
+            writeToFile(getStackTrace(e));
+            e.printStackTrace(new PrintWriter(System.out));
+            // connectToDB();
+=======
             writeToFile(e.getStackTrace().toString());
             e.printStackTrace();
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -272,6 +349,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             if(key!=null&&!"".equals(key)){
                 result =result+","+keyValueMapForRandomInsertions.get(new Integer(indexId)).get(new Integer(key));
             }
+<<<<<<< HEAD
+        } catch (Exception e) {
+            writeToFile(e.getMessage());
+            writeToFile(getStackTrace(e));
+            e.printStackTrace(new PrintWriter(System.out));
+            // connectToDB();
+        } finally {
+            closeEveryThing(con, stmt, rs);
+=======
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
         }
         return result;
     }
@@ -602,10 +689,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
+<<<<<<< HEAD
+            writeToFile(getStackTrace(e));
+            // connectToDB();
+=======
             writeToFile(e.getStackTrace().toString());
 
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
 
         } finally {
             closeEveryThing(con, stmt, rs);
@@ -632,9 +724,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             }
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
+<<<<<<< HEAD
+            writeToFile(getStackTrace(e));
+            // connectToDB();
+
+=======
             writeToFile(e.getStackTrace().toString());
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -700,9 +798,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             }
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
+<<<<<<< HEAD
+            writeToFile(getStackTrace(e));
+            // connectToDB();
+
+=======
             writeToFile(e.getStackTrace().toString());
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -762,26 +866,22 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
     void connectToDB() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-
-            con1 = DriverManager.getConnection(
-                    // "jdbc:mysql://localhost:3306/crowdindex?allowMultiQueries=true",
-                    // "root", "1234");
-                    "jdbc:mysql://localhost:3306/crowdindex", "root", "1234");
-            stmt1 = con1.createStatement();
-
+        	
+        	con1 = getConnection();
+        
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
 
         }
 
     }
 
     public Connection getConnection() throws Exception {
-    	Connection conn = null;
+<<<<<<< HEAD
+    	
     	// AppEngine
     	
     	String url = null;
@@ -791,20 +891,40 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
     	// Load the class that provides the "jdbc:google:mysql://"
     	// prefix.
     	Class.forName("com.mysql.jdbc.GoogleDriver");
-    	url = "jdbc:google:mysql://ece595-tm-starter:crowdindex?allowMultiQueries=true&user=root";
+    	url =
+    	"jdbc:google:mysql://ece595-tm-starter:crowdindex?allowMultiQueries=true&user=root";
     	} else {
-    		
     	 // Connecting from an external network.
-//    	Class.forName("com.mysql.jdbc.Driver");
-//    	url = "jdbc:mysql://173.194.250.134:3306?allowMultiQueries=true&user=root&password=1234";
-    		
-    	// Connecting to localDB
-        Class.forName("com.mysql.jdbc.Driver");
-        url = "jdbc:mysql://localhost:3306?allowMultiQueries=true&user=root&password=1234";
+    	Class.forName("com.mysql.jdbc.Driver");
+    	url = "jdbc:mysql://173.194.250.134:3306?allowMultiQueries=true&user=root&password=1234";
+    	}
+    	
+    	Connection conn = DriverManager.getConnection(url);
+    	
+    	
+    	// Local
+//        Class.forName("com.mysql.jdbc.Driver");
+//        Connection conn =  DriverManager.getConnection(
+//                "jdbc:mysql://localhost:3306/crowdindex?allowMultiQueries=true",
+//                "root", "1234");
+//        return DriverManager
+//                .getConnection(
+//                        "jdbc:mysql://localhost:10159/crowdindex?allowMultiQueries=true",
+//                        "root", "1234");
 
-    	}    	
-    	conn = DriverManager.getConnection(url);    	        
         return conn;
+                
+=======
+        Class.forName("com.mysql.jdbc.Driver");
+
+        return DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/crowdindex?allowMultiQueries=true", "root", "1234");
+        // return DriverManager
+        // .getConnection(
+        // "jdbc:mysql://localhost:10159/crowdindex?allowMultiQueries=true",
+        // "root", "1234");
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
+
     }
 
     void closeEveryThing(Connection con, Statement stmt, ResultSet res) {
@@ -1048,9 +1168,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             con.commit();
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
             try {
                 if (con != null)
                     con.rollback();
@@ -1098,9 +1218,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             // stmt.close();
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            writeToFile(getStackTrace(e));
             // connectToDB();
         } finally {
             closeEveryThing(con, stmt, rs);
@@ -1130,9 +1250,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             }
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
+<<<<<<< HEAD
+            writeToFile(getStackTrace(e));
+            // connectToDB();
+=======
             writeToFile(e.getStackTrace().toString());
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -1725,6 +1850,32 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             stmt.close();
             stmt = con.createStatement();
             stmt.execute(statment);
+<<<<<<< HEAD
+
+            /* We need to check the number of completed tasks of a user */
+
+
+            con.commit();
+        } catch (Exception e) {
+
+            e.printStackTrace(new PrintWriter(System.out));
+            writeToFile(e.getMessage());
+            writeToFile(getStackTrace(e));
+            try {
+                if (con != null)
+                    con.rollback();
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+                writeToFile(e1.getMessage());
+                writeToFile(e1.getStackTrace().toString());
+            }
+            reply = "Error in the previous result please debug";
+
+        } finally {
+            closeEveryThing(con, stmt, rs);
+=======
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
         }
         return reply;
     }
@@ -1802,6 +1953,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                 expectedDistError += i * errorCount.get(i) *expectedErrorAtLevel ;
             }
             stmt = con.createStatement();
+<<<<<<< HEAD
+            stmt.execute("insert into crowdindex.expecteddistanceerror (tree,level,disterr) values ("+treeIndex+","+level+","+expectedDistError+");");
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("select  tree,level,disterr  from crowdindex.expecteddistanceerror where tree = "+treeIndex+" order by level;");
+=======
             stmt.execute("insert into crowdindex.expectedDistanceError (tree,level,disterr) values ("
                     + treeIndex + "," + level + "," + expectedDistError + ");");
             stmt = con.createStatement();
@@ -1809,6 +1965,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             rs = stmt
                     .executeQuery("select  tree,level,disterr  from crowdindex.expectedDistanceError where tree = "
                             + treeIndex + " order by level;");
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
 
             ArrayList<Double> errors = new ArrayList<Double>();
             double sum = 0;
@@ -2196,6 +2353,67 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
         return html.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
     }
 
+<<<<<<< HEAD
+    @Override
+    public String printQueryResults(String s) throws IllegalArgumentException {
+
+        try {
+            java.sql.Connection con = null;
+            java.sql.Statement stmt = null;
+            java.sql.ResultSet rs = null;
+            try {
+                con = getConnection();
+            } catch (SQLException e) {
+            	
+                e.printStackTrace(new PrintWriter(System.out));
+                writeToFile(e.getMessage());
+                writeToFile(getStackTrace(e));
+                connectToDB();
+
+            }
+
+            try {
+
+                stmt = con.createStatement();
+
+            } catch (SQLException e) {
+
+                e.printStackTrace(new PrintWriter(System.out));
+                writeToFile(e.getMessage());
+                writeToFile(getStackTrace(e));
+                connectToDB();
+
+            }
+
+            try {
+                stmt = con.createStatement();
+                rs = stmt.executeQuery("select  *from sakila.actor;");
+                while (rs.next()) {
+                    String firstName = rs.getString("first_name");
+                    String lastName = rs.getString("last_name");
+                    System.out.println("   " + firstName + " " + lastName);
+                }
+                // rs.close();
+                // stmt.close();
+            } catch (SQLException e) {
+
+                e.printStackTrace(new PrintWriter(System.out));
+                writeToFile(e.getMessage());
+                writeToFile(getStackTrace(e));
+                connectToDB();
+
+            }
+            String username = "xxxx";
+            String password = "xxxx";
+            String result = "hey there" + username;
+
+        } catch (Exception e) {
+            writeToFile(e.getMessage());
+            writeToFile(getStackTrace(e));
+        }
+        return "Result printed successfully";
+    }
+=======
     //    @Override
     //    public String printQueryResults(String s) throws IllegalArgumentException {
     //
@@ -2263,6 +2481,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
     //        }
     //        return "Result printed successfully";
     //    }
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
 
     @Override
     public String registerUser(String input) throws IllegalArgumentException {
@@ -2286,9 +2505,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             }
         } catch (Exception e) {
 
-            e.printStackTrace();
+            e.printStackTrace(new PrintWriter(System.out));
             writeToFile(e.getMessage());
+<<<<<<< HEAD
+            writeToFile(getStackTrace(e));
+            // connectToDB();
+
+=======
             writeToFile(e.getStackTrace().toString());
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -2335,8 +2560,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
         } catch (Exception e) {
             writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
-            e.printStackTrace();
+            writeToFile(getStackTrace(e));
+            e.printStackTrace(new PrintWriter(System.out));
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -2371,9 +2596,19 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             } else
                 reply = "User name already registered";
         } catch (Exception e) {
+<<<<<<< HEAD
+
+            e.printStackTrace(new PrintWriter(System.out));
+            writeToFile(e.getMessage());
+            writeToFile(getStackTrace(e));
+
+            // connectToDB();
+
+=======
             e.printStackTrace();
             writeToFile(e.getMessage());
             writeToFile(e.getStackTrace().toString());
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -2881,8 +3116,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
         int startId=0,EndId=0;
 
 
+<<<<<<< HEAD
+            e.printStackTrace(new PrintWriter(System.out));
+            writeToFile(e.getMessage());
+            writeToFile(getStackTrace(e));
+=======
         startId = testCaseQueryId;
         for (int i = 1; i <= Constants.numberOfTestQueries; i++){
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
 
             s = "INSERT INTO crowdindex.query (id,dataitem,indexparam,querymodel,solved,createtime,dataset,description)"
                     + "values ("
@@ -2987,9 +3228,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
         } catch (Exception e) {
             writeToFile(e.getMessage());
+<<<<<<< HEAD
+            writeToFile(getStackTrace(e));
+            e.printStackTrace(new PrintWriter(System.out));
+            res= "Fail";
+=======
             writeToFile(e.getStackTrace().toString());
             e.printStackTrace();
             res = "Fail";
+>>>>>>> 7a0e0400d04c4197c894e37dc9269441b1407c19
         } finally {
             closeEveryThing(con, stmt, rs);
         }

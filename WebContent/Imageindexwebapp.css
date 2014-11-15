@@ -51,8 +51,9 @@ h1 {
 
 #left {
 	margin-left:auto;
-margin-right:auto;
-width: 56em; 
+	margin-right:auto;
+	width: 110em; 
+/*width: 90em; */
  /*width: 70%;*/  
   /* float: left;
    width: 46.5%;
@@ -85,6 +86,16 @@ width: 56em;
 	margin-right:auto;
 
   
+}
+.blankImage  {
+	hight:1.5em;
+	width:10em;
+	 border: blank;
+}
+.blankImageSmall  {
+	hight:1.5em;
+	width:1.5em;
+	 border: blank;
 }
 .centerplacement  {
 	margin-left:auto;
@@ -150,14 +161,21 @@ width: 56em;
 #query-content {
 	position:relative;
 	left:0em;
-	width:33em;
+	width:60em;
+	margin: auto;
+}
+
+#answer-container {
+	margin: auto;
+	width:70em;
 }
 
 #answer-wrapper-view{
 	float:left;
 	overflow-x: hidden;	
 	overflow-y: visible;	
-	width: 50em;
+	/*width: 65em;*/
+	width: 100em;
 }
 
 #answer-wrapper {
@@ -189,6 +207,11 @@ width: 56em;
 	height: 11em;	
 }
 
+.first-answer-item .gwt-Label {
+	margin: auto;
+	text-align: center;
+}
+
 .last-answer-item {
 	float:left;
 	position:relative;
@@ -197,12 +220,17 @@ width: 56em;
 	height: 11em;	
 }
 
+.last-answer-item .gwt-Label {
+	margin: auto;
+	text-align: center;
+}
+
 .separator-answer-item {
 	float:left;
 	position:relative;
 	padding:0em;
 	width: 4.5em;
-	height: 11em;
+	height: 14em;
 	overflow: hidden;
 }
 
@@ -228,6 +256,15 @@ margin-right: auto;
 	margin:auto;
 	padding:0em;
 }
+
+.tn-toggle-imgs .html-face {
+	width:1em;
+	height:1em;
+	margin:auto;
+	display: block;
+	position: relative;
+}
+
 
 #tn-scroll-left{
 	float:left;	
@@ -266,25 +303,74 @@ margin-right: auto;
 }
 
 #top {
+	height: 6em;
 	background-color: black;
 }
 
 #top *{
+	float:left;
+	position: relative;
 	display:block;	
 }
-#top span {
-	color: white;
-	font-size: 2em;
-	position: relative;
-	top: -2em;
-	left: 9em;
-	float: left;
+
+#info-top {
+	padding-left: 3em;
+	padding-top: 1em;
 }
+#info-top * {
+	float:none;
+}
+
+.top-text {
+	color: white;
+}
+
+#top .appName {
+	font-size: 2em;
+	padding-top: 1em;
+	padding-left: 1em;
+	padding-right: 3em;
+}
+#getTaskButtonContainer {
+	padding-top: 3em;
+	padding-left: 1em;
+	padding-right: 1em;
+
+}
+
+#resetButtonContainer {
+	padding-top: 3em;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
 
 .select-option {
 	height: 3em;
 	width: 3em;
 	margin: auto;
+}
+
+button i {
+	margin: 0.2em;
+}
+
+button span {
+	margin-left: 0.2em;
+	margin-right: 0.2em;
+}
+
+#taskAvailabilityLabelContainer .gwt-Label * {
+	display: inline;
+}
+
+.user-name {
+	font-size: 1.2em;
+	font-weight: 900;
+}
+
+#task-count {
+	font-size: 1.5em;
 }
 
 /*.select-option * {
@@ -309,7 +395,7 @@ margin-right: auto;
   border-bottom: 2px solid #848280;
   background-color: #AAAAAA;
   height: 14pt;
-  width: 50%;
+  /*width: 50%;*/
 }
 .gwt-ProgressBar-shell .gwt-ProgressBar-bar {
   background-color: #67A7E3;

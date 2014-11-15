@@ -1,6 +1,8 @@
 package edu.purdue.crowdindex.server.index;
 
 import edu.purdue.crowdindex.shared.control.TaskManager;
+//this code was adopted from the princton libaray code
+//http://algs4.cs.princeton.edu/62btrees/BTree.java.html
 
 public class BTree<Key extends Comparable<Key>, Value> {
 

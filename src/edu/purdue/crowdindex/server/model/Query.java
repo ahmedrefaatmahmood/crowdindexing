@@ -10,6 +10,13 @@ public class Query {
     int solved;
     String retreivedResult;
     int solvedsofar;
+    int equality;
+    public int getEquality() {
+        return equality;
+    }
+    public void setEquality(int equality) {
+        this.equality = equality;
+    }
     public int getSolved() {
         return solved;
     }

@@ -12,7 +12,6 @@
 <!-- Consider inlining CSS to reduce the number of requested files -->
 <!--                                                               -->
 <link type="text/css" rel="stylesheet" href="Imageindexwebapp.css">
-
 <link type="text/css" rel="stylesheet" href="css/font-awesome.min.css">
 
 <!--                                           -->
@@ -157,9 +156,22 @@ body {
 		<div id="top">
 			<img src="title/logo-pu.png" alt="purdue logo" width="200" height="75">
 			<!-- <h1>Crowd Indexing Project</h1> -->
-			<span>Crowd Indexing Project</span>
+			<span class="top-text appName">Crowd Indexing Project</span>
+			<div id="getTaskButtonContainer"></div>
+			<div id="resetButtonContainer"></div>
+
+			<div id="info-top">
+			<!-- <span class="top-text">Info.</span> -->
+			<div id="taskAvailabilityLabelContainer" class="top-text"></div>
+			<div id="errorLabelContainer" class="top-text"></div>
+			<div id="taskInfoContainer" class="top-text"></div>
+			</div>
+
 		</div>
-			<div id="taskBarContainer">
+		<div id="taskBarContainer">
+		<div id="statusDiv" ></div>
+		
+		
 		<!--  -->
 		</div>
 		<div id="info">
@@ -187,21 +199,15 @@ body {
 				<td id="signUpButtonContainer"></td>
 				
 			</tr>
-			<tr>
+<!-- 			<tr>
 				<td id="getTaskButtonContainer"></td>
 				<td id="resetButtonContainer"></td>
-			</tr>
-			<tr>
+			</tr> -->
+<!-- 			<tr>
 				<td id="statusDiv" colspan="8"></td>
-			</tr>
+			</tr> -->
 
 		</table>
-			<div id="errorLabelContainer">
-		<!-- any thing -->
-	</div>
-	<div id="taskAvailabilityLabelContainer">
-		<!-- any thing -->
-	</div>
 		</div>
 	<div id="container">
 			<!-- <p>Please select the proper location for the image in the right to the images at left .</p> -->

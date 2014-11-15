@@ -76,7 +76,7 @@ public class TaskManager {
             t.taskId = taskCount++;
             t.nodeLevel = 0;
             t.prompt = "please select the proper location for this item select the image it self for equal.";
-            t.replications = Constants.replicationNum;
+            t.replications = Constants.defaultReplications;
             t.node = n;
             for(int i =0;i<n.m;i++ ){
                 t.dataObjects.add(""+n.children[i].key);
@@ -97,7 +97,7 @@ public class TaskManager {
         t.taskId = taskCount++;
         t.nodeLevel = level;
         t.prompt = "please select the proper location for this item select the image it self for equal.";
-        t.replications = Constants.replicationNum;
+        t.replications = Constants.defaultReplications;
         t.node = n;
         for(int i =0;i<n.m;i++ ){
             t.dataObjects.add(""+n.children[i].key);
@@ -118,7 +118,7 @@ public class TaskManager {
         t.taskId = taskCount++;
         t.nodeLevel = 0;
         t.prompt = "please select the proper location for this item select the image it self for equal.";
-        t.replications = Constants.replicationNum;
+        t.replications = Constants.defaultReplications;
         t.node = n;
         for(int i =0;i<n.m;i++ ){
             t.dataObjects.add(""+n.children[i].key);
@@ -138,7 +138,7 @@ public class TaskManager {
             t.taskId = taskCount++;
             t.nodeLevel = level;
             t.prompt = "please select the proper location for this item select the image it self for equal.";
-            t.replications = Constants.replicationNum;
+            t.replications = Constants.defaultReplications;
             t.node = n;
             for(int i =0;i<n.m;i++ ){
                 t.dataObjects.add(""+n.children[i].key);

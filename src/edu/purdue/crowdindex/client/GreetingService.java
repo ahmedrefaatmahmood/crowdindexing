@@ -10,7 +10,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface GreetingService extends RemoteService {
     String getTask(String name) throws IllegalArgumentException;
     String returnResult(String name) throws IllegalArgumentException;
-    String printQueryResults(String s) throws IllegalArgumentException;
+    //  String printQueryResults(String s) throws IllegalArgumentException;
     String registerUser(String s) throws IllegalArgumentException;
     String signUp(String s) throws IllegalArgumentException;
     String reset(String s) throws IllegalArgumentException;

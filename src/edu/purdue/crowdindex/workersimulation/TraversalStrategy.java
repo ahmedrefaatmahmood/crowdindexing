@@ -21,19 +21,21 @@ public class TraversalStrategy {
     }
     private final static Logger logger = Logger.getLogger(TraversalStrategy.class
             .getName());
+    
     public TraversalStrategy(){
-        try {
-            FileHandler fileHandler = new FileHandler("myapp-log.%u.%g.txt",
-                    true);
-            fileHandler.setFormatter(new SimpleFormatter());
-            logger.addHandler(fileHandler);
-        } catch (SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+//        try {
+//        	
+//            FileHandler fileHandler = new FileHandler("myapp-log.%u.%g.txt",
+//                    true);
+//            fileHandler.setFormatter(new SimpleFormatter());
+//            logger.addHandler(fileHandler);
+//        } catch (SecurityException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
     }
 
     // this is a test of leaf level aggregation with a specific number of workers
