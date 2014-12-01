@@ -42,7 +42,7 @@ public class Imageindexwebapp implements EntryPoint {
     private static String buttonWidth = "10em";
     private static String longseperator = "40em";
     private static String smallButtonWidth = "3em";
-    private static int MAX_DISPLAY_ITEM = 11;
+    private static int MAX_DISPLAY_ITEM = 6;
     String taskId;
     String queryId;
     String queryItem;
@@ -256,7 +256,7 @@ public class Imageindexwebapp implements EntryPoint {
         answerWrapperView.add(answerWrapper);
         int w = dataiTemslist.length;
 //        int w = (dataiTemslist.length-1)/2;
-//        Window.alert("dataitemlist length = "+dataiTemslist.length+", w = "+w);
+        GWT.log("dataitemlist length = "+dataiTemslist.length+", w = "+w);
         if (w > MAX_DISPLAY_ITEM) {
             // create arrow buttons
             PushButton scrollLeft = new PushButton(" ");
