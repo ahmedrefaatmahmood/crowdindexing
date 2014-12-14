@@ -24,4 +24,6 @@ public interface GreetingServiceAsync {
             throws IllegalArgumentException;
     void test( String input,AsyncCallback<String> callback)
             throws IllegalArgumentException;
+    void skipTask( String input,AsyncCallback<String> callback)
+            throws IllegalArgumentException;
 }

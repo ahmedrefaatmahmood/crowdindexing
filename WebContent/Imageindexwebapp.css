@@ -343,7 +343,11 @@ margin-right: auto;
 	padding-left: 1em;
 	padding-right: 1em;
 }
-
+#skipButtonContainer {
+	padding-top: 3em;
+	padding-left: 1em;
+	padding-right: 1em;
+}
 
 .select-option {
 	height: 3em;

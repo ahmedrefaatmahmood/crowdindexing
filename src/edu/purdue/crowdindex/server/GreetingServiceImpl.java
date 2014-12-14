@@ -58,6 +58,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
      * @param s
      */
     void writeToFile(String s) {
+
+
         log.info(s);
     }
     /**
@@ -766,7 +768,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             con1 = DriverManager.getConnection(
                     // "jdbc:mysql://localhost:3306/crowdindex?allowMultiQueries=true",
                     // "root", "1234");
-                    "jdbc:mysql://localhost:3306/crowdindex", "root", "1234");
+                    "jdbc:mysql://localhost:3306/crowdindex", "ahmed", "1234");
             stmt1 = con1.createStatement();
 
         } catch (Exception e) {
@@ -782,12 +784,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
     public Connection getConnection() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
 
-        return DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/crowdindex?allowMultiQueries=true", "root", "1234");
-        // return DriverManager
-        // .getConnection(
-        // "jdbc:mysql://localhost:10159/crowdindex?allowMultiQueries=true",
-        // "root", "1234");
+        //        return DriverManager.getConnection(
+        //                "jdbc:mysql://localhost:3306/crowdindex?allowMultiQueries=true", "root", "1234");
+        return DriverManager
+                .getConnection(
+                        "jdbc:mysql://crowindex.cs.purdue.edu:10159/crowdindex?allowMultiQueries=true",
+                        "root", "1234");
 
     }
 
@@ -1085,6 +1087,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             e.printStackTrace();
             writeToFile(e.getMessage());
             writeToFile(e.getStackTrace().toString());
+
             // connectToDB();
         } finally {
             closeEveryThing(con, stmt, rs);
@@ -2258,6 +2261,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
         Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
+        String message ="";
         try {
             con = getConnection();
             stmt = con.createStatement();
@@ -2267,20 +2271,24 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                 id = rs.getInt("id");
                 firstName = rs.getString("name");
                 password = rs.getString("password");
-            }
-        } catch (Exception e) {
 
+            }
+            if (firstName.equals(s[0]) && password.equals(s[1]))
+                message =  "Login successfull your id is:" + id;
+            else
+                message ="Incorrect user name and password";
+        } catch (Exception e) {
+            message =e.getMessage();
             e.printStackTrace();
             writeToFile(e.getMessage());
             writeToFile(e.getStackTrace().toString());
+
         } finally {
             closeEveryThing(con, stmt, rs);
+            return message;
         }
 
-        if (firstName.equals(s[0]) && password.equals(s[1]))
-            return "Login successfull your id is:" + id;
-        else
-            return "Incorrect user name and password";
+
     }
 
     @Override
@@ -2351,7 +2359,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                 String statment = "INSERT INTO crowdindex.users (name,password,opentasks,completedtasks)values ('"
                         + firstName + "' ,'" + password + "',0,0);";
                 stmt.execute(statment);
-                reply = "user registered please log in now to get tasks";
+                reply = "Thank you for signing up, please log in now to get tasks";
             } else
                 reply = "User name already registered";
         } catch (Exception e) {
@@ -3430,5 +3438,28 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                 + h + "," + startingIndex + "," + score + "); ";
         stmt.execute(statment);
 
+    }
+    @Override
+    public String skipTask(String input) throws IllegalArgumentException {
+        Connection con = null;
+        Statement stmt = null;
+        String result = "ok";
+        try {
+            con = getConnection();
+            stmt = con.createStatement();
+            String  statment = " update crowdindex.task set taskstatus =  "+Constants.task_assginedpostponed
+                    + " where id = " + input + ";";
+            stmt.execute(statment);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            writeToFile(e.getStackTrace().toString());
+            result = "fail";
+        }
+        finally{
+            closeEveryThing(con, stmt, null);
+        }
+
+        return result;
     }
 }

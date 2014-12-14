@@ -17,4 +17,5 @@ public interface GreetingService extends RemoteService {
     String getAvailTask(String s) throws IllegalArgumentException;
     String test(String s) throws IllegalArgumentException;
     String resetUserTasks( String input) throws IllegalArgumentException;
+    String skipTask( String input) throws IllegalArgumentException;
 }

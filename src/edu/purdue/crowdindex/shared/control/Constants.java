@@ -17,6 +17,12 @@ public   class Constants {
     public static int numberOfProbalisticQueries =4;
     public static int dataSet1TestTreeForProbalisticQueries = 5;
     public static int dataSet2TestTreeForProbalisticQueries = 6;
+    //Task status constanst
+    public static int task_available =0;
+    public static int task_assgined =1;
+    public static int task_solved =2;
+    public static int task_assginedpostponed =3; //task delayed but it has been assgined to user
+    public static int task_unassginedpostponed =4;//task delayed but it has not been assgined to user
 
     //Task Type constanst
     public static String astar = "astar";

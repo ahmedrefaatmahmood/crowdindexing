@@ -13,7 +13,6 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -42,7 +41,7 @@ public class Imageindexwebapp implements EntryPoint {
     private static String buttonWidth = "10em";
     private static String longseperator = "40em";
     private static String smallButtonWidth = "3em";
-    private static int MAX_DISPLAY_ITEM = 11;
+    private static int MAX_DISPLAY_ITEM = 6;
     String taskId;
     String queryId;
     String queryItem;
@@ -59,7 +58,7 @@ public class Imageindexwebapp implements EntryPoint {
 
     HorizontalPanel fPanelMiddle;
     FlowPanel fPanelRight;
-//    HorizontalPanel center;
+    //    HorizontalPanel center;
     RootPanel center;
     String selectedResult;
     Label textToServerLabel;
@@ -83,6 +82,7 @@ public class Imageindexwebapp implements EntryPoint {
     Button registerUserButton;
     Button getTaskButton;
     Button resetButton;
+    Button skipButton;
     Button signUpButton;
     Button test;
     String userId;
@@ -194,6 +194,35 @@ public class Imageindexwebapp implements EntryPoint {
         }
     }
 
+    private void skipCurrentTask() {
+        errorLabel.setText("");
+        String textToServer = taskId;
+        // Then, we send the input to the server.
+        // getTaskButton.setEnabled(false);
+        textToServerLabel.setText(textToServer);
+        serverResponseLabel.setText("");
+
+        greetingService.skipTask(textToServer, new AsyncCallback<String>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                errorLabel.setText(SERVER_ERROR);
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                if (result.equals("ok")) {
+                    resultSend=true;
+                    getTask();
+
+                } else {
+                    errorLabel.setText(result);
+                    taskInfoLabel.setText("");
+                }
+            }
+        });
+
+    }
+
     void showPanels() {
         DOM.getElementById("right").getStyle().setDisplay(Display.BLOCK);
         DOM.getElementById("left").getStyle().setDisplay(Display.BLOCK);
@@ -255,8 +284,8 @@ public class Imageindexwebapp implements EntryPoint {
         answerWrapperView.getElement().setId("answer-wrapper-view");
         answerWrapperView.add(answerWrapper);
         int w = dataiTemslist.length;
-//        int w = (dataiTemslist.length-1)/2;
-//        Window.alert("dataitemlist length = "+dataiTemslist.length+", w = "+w);
+        //        int w = (dataiTemslist.length-1)/2;
+        //        Window.alert("dataitemlist length = "+dataiTemslist.length+", w = "+w);
         if (w > MAX_DISPLAY_ITEM) {
             // create arrow buttons
             PushButton scrollLeft = new PushButton(" ");
@@ -280,15 +309,15 @@ public class Imageindexwebapp implements EntryPoint {
                     js_slideRightAnswerContent();
                 }
             });
-            
-            fPanelLeft.getElement().setId("asnwer-container");        
+
+            fPanelLeft.getElement().setId("asnwer-container");
             fPanelLeft.add(scrollLeft);
             fPanelLeft.add(answerWrapperView);
             fPanelLeft.add(scrollRight);
-        	
+
         }
         else{
-        	fPanelLeft.getElement().setId("asnwer-container");        
+            fPanelLeft.getElement().setId("asnwer-container");
             fPanelLeft.add(answerWrapperView);
         }
 
@@ -797,8 +826,13 @@ public class Imageindexwebapp implements EntryPoint {
             queryText = "\r\n\r\nThe target of the experiment is to estimate the size of the square. Below, you are given a collection of squares to compare against.\r\n"
                     + "The squares are sorted from left to right in increasing order of their size.\r\n"
                     + "It is required to find the square with the closest matching size to the query square.\r\n"
-                    + "If you think that the size of the query square  is almost equal to one of the squares, then press the button on top of that square.\r\n"
                     + "If you think that the size of the query  square  lies in-between two consecutive squares, then press the button that is in-between the two squares.\r\n";
+
+            if( equality!=null&&("" + Constants.equality_true).equals(equality)==true)
+                queryText =queryText +  "If you think that the size of the query square  is almost equal to one of the squares, then press the button on top of that square.\r\n";
+            if( "informed".equals(taskType))
+                queryText =queryText +  "If a number appears on top of a square images, it shows how many other users have selected this answer.\r\n";
+
 
             // image = new
             // Image("http://storage.googleapis.com/crowdindex/data/squareimages/("+
@@ -834,8 +868,12 @@ public class Imageindexwebapp implements EntryPoint {
                     + "Below, you are given a collection of cars to compare against.\r\n"
                     + "The cars are sorted from left to right in increasing order of their price.\r\n"
                     + "It is required to find the car with the closest matching price to the query car.\r\n"
-                    + "If you think that the price of the query car is almost equal to one of the cars, then press the button on top of that car.\r\n"
                     + "If you think that the price of the query car lies in-between two consecutive cars, then press the button that is in-between the two cars.\r\n";
+            if( equality!=null&&("" + Constants.equality_true).equals(equality)==true)
+                queryText =queryText +     "If you think that the price of the query car is almost equal to one of the cars, then press the button on top of that car.\r\n";
+            if( "informed".equals(taskType))
+                queryText =queryText +  "If a number appears on top of car images, it shows how many other users have selected this answer.\r\n";
+
 
             image = new Image("data/Image_" + queryItem + "/(" + queryItem
                     + "_0).jpg");
@@ -1027,7 +1065,8 @@ public class Imageindexwebapp implements EntryPoint {
                 selectedResult = ((RadioButton) event.getSource()).getTitle();
                 //                System.out.println("hi i was clicked and i am button "
                 //                        + ((RadioButton) event.getSource()).getTitle());
-                showConfirmMessageBox();
+                // showConfirmMessageBox();
+                sendResultToServer(selectedResult);
             }
         };
         progress = 0;
@@ -1067,13 +1106,14 @@ public class Imageindexwebapp implements EntryPoint {
         fPanelMiddle.add(wrapper);
 
         fPanelRight = new FlowPanel();
-//        center = new HorizontalPanel();
-//        center = new FlowPanel();
+        //        center = new HorizontalPanel();
+        //        center = new FlowPanel();
         center = RootPanel.get("left");
-//        RootPanel.get("left").add(center);
+        //        RootPanel.get("left").add(center);
         registerUserButton = new Button("Log in");
         getTaskButton = new Button(
                 "<i class=\"fa fa-step-forward fa-lg\"></i> <span>Get task</span>");
+        skipButton = new Button("Skip task");
         nameField = new TextBox();
         nameField.setText("");
         passwordField = new PasswordTextBox();
@@ -1097,6 +1137,10 @@ public class Imageindexwebapp implements EntryPoint {
         getTaskButton.setEnabled(false);
         getTaskButton.setVisible(false);
 
+        skipButton.addStyleName("getTaskButton");
+        skipButton.setEnabled(false);
+        skipButton.setVisible(false);
+
         warninglabel = new Label(
                 "Please DO NOT USE Your Purdue Account information.");
         warninglabel.setVisible(true);
@@ -1119,6 +1163,7 @@ public class Imageindexwebapp implements EntryPoint {
         RootPanel.get("registerUserContainer").add(registerUserButton);
         RootPanel.get("getTaskButtonContainer").add(getTaskButton);
         RootPanel.get("resetButtonContainer").add(resetButton);
+        RootPanel.get("skipButtonContainer").add(skipButton);
         // RootPanel.get("resetButtonContainer").add(bar1);
         RootPanel.get("signUpButtonContainer").add(signUpButton);
 
@@ -1228,13 +1273,15 @@ public class Imageindexwebapp implements EntryPoint {
                                 String[] s = result.split(":");
                                 getTaskButton.setEnabled(true);
                                 getTaskButton.setVisible(true);
+                                skipButton.setEnabled(true);
+                                skipButton.setVisible(true);
                                 registerUserButton.setVisible(false);
                                 nameField.setVisible(false);
                                 passwordField.setVisible(false);
                                 userName = nameField.getText();
                                 userId = s[1];
                                 errorLabel.addStyleName("error-label");
-//                                errorLabel.setText(result);
+                                //                                errorLabel.setText(result);
                                 if ("1".equals(userId)) {
                                     resetButton.setVisible(true);
                                 } else {
@@ -1279,6 +1326,8 @@ public class Imageindexwebapp implements EntryPoint {
                             } else {
                                 getTaskButton.setEnabled(false);
                                 getTaskButton.setVisible(false);
+                                skipButton.setEnabled(false);
+                                skipButton.setVisible(false);
                                 registerUserButton.setVisible(true);
                                 nameField.setVisible(true);
                                 passwordField.setVisible(true);
@@ -1407,11 +1456,43 @@ public class Imageindexwebapp implements EntryPoint {
             }
         }
 
+        // Create a handler for the getTaskButton and nameField
+        class SkipTaskHandler implements ClickHandler, KeyUpHandler {
+            /**
+             * Fired when the user clicks on the getTaskButton.
+             */
+            @Override
+            public void onClick(ClickEvent event) {
+                skipTask();
+            }
+
+            /**
+             * Fired when the user types in the nameField.
+             */
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+                    skipTask();
+                }
+            }
+
+            /**
+             * Send the name from the nameField to the server and wait for a
+             * response.
+             */
+            private void skipTask() {
+                skipCurrentTask();
+
+
+            }
+        }
         // Add a handler to send the name to the server
         MyHandler handler = new MyHandler();
         getTaskButton.addClickHandler(handler);
         nameField.addKeyUpHandler(handler);
 
+        SkipTaskHandler skipTaskHandler = new SkipTaskHandler();
+        skipButton.addClickHandler(skipTaskHandler);
         /* Preparing message boxes */
         showMessageBox("1) This website and tasks shown are for research purposes. "
                 + "The purpose of this research is to study how humans can make decisions in a crowd-sourced environment. "
@@ -1521,20 +1602,20 @@ public class Imageindexwebapp implements EntryPoint {
 
     }
 
-	/**
-	 * @param s
-	 */
-	private void setTaskAvailableLabel(String[] s) {
-		taskAvailableLable.getElement().setInnerHTML("<p> Welcome <span class=\"user-name\" >"
-				+ userName
-				+ "</span>, there are <span id=\"task-count\">"+s[0]+"</span> tasks avaiable</p>");
-	}
-	
-	/**
-	 * @param s
-	 */
-	private void updateTaskAvailableLabel(String[] s) {
-		DOM.getElementById("task-count").setInnerHTML(s[0]);		
-	}
+    /**
+     * @param s
+     */
+    private void setTaskAvailableLabel(String[] s) {
+        taskAvailableLable.getElement().setInnerHTML("<p> Welcome <span class=\"user-name\" >"
+                + userName
+                + "</span>, there are <span id=\"task-count\">"+s[0]+"</span> tasks avaiable</p>");
+    }
+
+    /**
+     * @param s
+     */
+    private void updateTaskAvailableLabel(String[] s) {
+        DOM.getElementById("task-count").setInnerHTML(s[0]);
+    }
 
 }
