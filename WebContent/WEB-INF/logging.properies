@@ -1,5 +1,10 @@
 # Set the default logging level for all loggers to WARNING
 .level = WARNING
+	
+	
+org.apache.catalina.level=FINEST
+
+		
 
 # Default level for subpackages of 'server' will be INFO
 #com.company.whatever.server.level=INFO

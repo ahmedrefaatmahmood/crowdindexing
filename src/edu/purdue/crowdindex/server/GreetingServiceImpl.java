@@ -1,5 +1,7 @@
 package edu.purdue.crowdindex.server;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -8,6 +10,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -26,6 +30,7 @@ import edu.purdue.crowdindex.workersimulation.TraversalStrategy.MaxFreqType;
  */
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements GreetingService {
+    private final ReentrantLock dblock = new ReentrantLock(true);
     Logger log = Logger.getLogger(this.getClass().getName());
     boolean indexBuild;
     ArrayList<BTree<Integer, String>> st;
@@ -61,6 +66,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 
         log.info(s);
+
     }
     /**
      * read the configuration from the database if reset is
@@ -91,9 +97,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                 reset();
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
 
         } finally {
             closeEveryThing(con, stmt, rs);
@@ -126,9 +135,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             stmt.execute(statment);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -186,16 +198,22 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                             + "' where  id =" + S[0] + "  ;");
                 } catch (SQLException e) {
 
-                    e.printStackTrace();
-                    writeToFile(e.getMessage());
-                    writeToFile(e.getStackTrace().toString());
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+
+                    log.log(Level.SEVERE, e.getMessage(), e);
+                    log.log(Level.INFO,pw.toString());
                 }
             }
             generateTasks(con, stmt, rs, queryList);
         } catch (Exception e) {
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
-            e.printStackTrace();
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -215,20 +233,22 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                 // insert tasks for users
                 int taskgroupid = createTaskGroup(con, stmt, rs, q, roothieght, replications);
                 String dataItems = getDataItems(q.getIndexParam(), "root", q.getQueryModel());
-                for (int i = 0; i < replications; i++) {
-                    createTaskBreadth(con, stmt, rs, q, roothieght, replications, taskgroupid,
-                            dataItems, "root", q.getQueryModel(),q.getEquality());
-                }
+                if(taskgroupid!=-1)
+                    for (int i = 0; i < replications; i++) {
+                        createTaskBreadth(con, stmt, rs, q, roothieght, replications, taskgroupid,
+                                dataItems, "root", q.getQueryModel(),q.getEquality());
+                    }
             } else if (q.getQueryModel().equals(Constants.depth)) {
                 // get replications per level for query
                 // select users with least number of open tasks
                 // insert tasks for users
                 int taskgroupid = createTaskGroup(con, stmt, rs, q, roothieght, replications);
                 String dataItems = getDataItems(q.getIndexParam(), "root", q.getQueryModel());
-                for (int i = 0; i < replications; i++) {
-                    createTaskdepth(con, stmt, rs, q, roothieght, replications, dataItems, "root",
-                            "" + taskgroupid,q.getEquality());
-                }
+                if(taskgroupid!=-1)
+                    for (int i = 0; i < replications; i++) {
+                        createTaskdepth(con, stmt, rs, q, roothieght, replications, dataItems, "root",
+                                "" + taskgroupid,q.getEquality());
+                    }
             } else if (q.getQueryModel().equals(Constants.test)) {
                 String path = "root" + q.getExpectedPath();
                 int level = 0;
@@ -236,11 +256,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                 while (true) {
                     int taskgroupid = createTaskGroup(con, stmt, rs, q, level, replications);
                     String dataItems = getDataItems(q.getIndexParam(), path, q.getQueryModel());
-                    for (int k = 0; k < replications; k++) {
-                        createTaskBreadth(con, stmt, rs, q, level, replications, taskgroupid,
-                                dataItems, path, Constants.test,q.getEquality());
+                    if(taskgroupid!=-1){
+                        for (int k = 0; k < replications; k++) {
+                            createTaskBreadth(con, stmt, rs, q, level, replications, taskgroupid,
+                                    dataItems, path, Constants.test,q.getEquality());
+                        }
+                        level++;
                     }
-                    level++;
                     if (path.contains(";"))
                         path = path.substring(0, path.lastIndexOf(";"));
                     else
@@ -250,17 +272,19 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                 int taskgroupid = createTaskGroup(con, stmt, rs, q, roothieght, replications);
                 String dataItems = getDataItems(q.getIndexParam(), "root", q.getQueryModel());
                 String equivalentdataitems = getEquivalentDataItems(q.getIndexParam(), dataItems);
-                for (int i = 0; i < replications; i++) {
-                    createTaskBreadth(con, stmt, rs, q, roothieght, replications, taskgroupid,
-                            equivalentdataitems, "root", q.getQueryModel(),q.getEquality());
-                }
+                if(taskgroupid!=-1)
+                    for (int i = 0; i < replications; i++) {
+                        createTaskBreadth(con, stmt, rs, q, roothieght, replications, taskgroupid,
+                                equivalentdataitems, "root", q.getQueryModel(),q.getEquality());
+                    }
             } else if (q.getQueryModel().equals(Constants.astar)) {
                 int taskgroupid = createTaskGroup(con, stmt, rs, q, roothieght, replications);
                 String dataItems = getDataItems(q.getIndexParam(), "root", q.getQueryModel());
-                for (int i = 0; i < replications; i++) {
-                    createTaskAstar(con, stmt, rs, q, roothieght, replications, taskgroupid,
-                            dataItems, "root", q.getQueryModel(), 1.0,q.getEquality());
-                }
+                if(taskgroupid!=-1)
+                    for (int i = 0; i < replications; i++) {
+                        createTaskAstar(con, stmt, rs, q, roothieght, replications, taskgroupid,
+                                dataItems, "root", q.getQueryModel(), 1.0,q.getEquality());
+                    }
             }
         }
 
@@ -407,7 +431,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
     }
 
 
-    void createTaskBreadth(Connection con, Statement stmt, ResultSet rs, Query q, int level,
+    public void createTaskBreadth(Connection con, Statement stmt, ResultSet rs, Query q, int level,
             int replication, int taskgroupid, String dataitems, String nodepath, String taskModel,int equality)
                     throws Exception {
         int id = 0;
@@ -449,7 +473,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
     }
 
-    void createTaskAstar(Connection con, Statement stmt, ResultSet rs, Query q, int level,
+    public void createTaskAstar(Connection con, Statement stmt, ResultSet rs, Query q, int level,
             int replication, int taskgroupid, String dataitems, String nodepath, String taskModel,
             Double gvalue,int equality) throws Exception {
         int id = 0;
@@ -504,7 +528,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
      * @param taskType
      * @return this function returns the keys (not values) for query purposes
      */
-    String getDataItems(int treeindex, String nodepath, String taskType) {
+    public String getDataItems(int treeindex, String nodepath, String taskType) {
         String result = "";
         if ("root".equals(nodepath)) {
 
@@ -550,27 +574,38 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
         }
         return result;
     }
-    int createTaskGroup(Connection con, Statement stmt, ResultSet rs, Query q, int level,
+    public int createTaskGroup(Connection con, Statement stmt, ResultSet rs, Query q, int level,
             int replication) throws Exception {
-        int id = 0;
+        int id = -1;
         stmt = con.createStatement();
-        rs = stmt.executeQuery("select  ifnull(max(id),0)+1 as maxid  from crowdindex.taskgroup; ");
+        rs = stmt.executeQuery("select  id as id  from crowdindex.taskgroup where queryid = "+q.getQueryId()+" and level = "+level+"; ");
         while (rs.next()) {
-            id = rs.getInt("maxid");
+            id = rs.getInt("id");
         }
-        stmt = con.createStatement();
-        String statment = "insert into crowdindex.taskgroup (id,queryid,level,replicationnum,expectedresult,creatationtime,respondsofar) values ("
-                + id
-                + ","
-                + q.getQueryId()
-                + ","
-                + level
-                + ","
-                + replication
-                + ",'"
-                + q.getExpectedPath() + "',CURRENT_TIMESTAMP,0 ); ";
-        stmt.execute(statment);
-        return id;
+        if(id==-1 || Constants.astar.equals(q.getQueryModel())) //this means no  taskgroup of the same level exists so create a new one except for astar which is allowed to have more than one task at the same level
+        {
+            id=0;
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("select  ifnull(max(id),0)+1 as maxid  from crowdindex.taskgroup; ");
+            while (rs.next()) {
+                id = rs.getInt("maxid");
+            }
+            stmt = con.createStatement();
+            String statment = "insert into crowdindex.taskgroup (id,queryid,level,replicationnum,expectedresult,creatationtime,respondsofar) values ("
+                    + id
+                    + ","
+                    + q.getQueryId()
+                    + ","
+                    + level
+                    + ","
+                    + replication
+                    + ",'"
+                    + q.getExpectedPath() + "',CURRENT_TIMESTAMP,0 ); ";
+            stmt.execute(statment);
+            return id;
+        }else{//this means a  taskgroup of the same level already exists do not  create a new one
+            return -1;
+        }
     }
 
     Query getQueryById(String queryId) {
@@ -603,9 +638,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
         } catch (Exception e) {
 
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
+
 
 
         } finally {
@@ -633,9 +672,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             }
         } catch (Exception e) {
 
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -701,16 +743,19 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             }
         } catch (Exception e) {
 
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
         } finally {
             closeEveryThing(con, stmt, rs);
         }
 
     }
 
-    void builtTreeFromDataSet(BTree<Integer, String> tree, int dataset, String description,
+    public void builtTreeFromDataSet(BTree<Integer, String> tree, int dataset, String description,
             int treeIndex) {
         if ("query".equals(description)) {
             if (dataset == 1) {// squares data set
@@ -752,9 +797,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -773,9 +821,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
         } catch (Exception e) {
 
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
 
         }
 
@@ -798,22 +849,34 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             try {
                 res.close();
             } catch (SQLException logOrIgnore) {
-                writeToFile(logOrIgnore.getMessage());
-                writeToFile(logOrIgnore.getStackTrace().toString());
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                logOrIgnore.printStackTrace(pw);
+
+                log.log(Level.SEVERE, logOrIgnore.getMessage(), logOrIgnore);
+                log.log(Level.INFO,pw.toString());
             }
         if (stmt != null)
             try {
                 stmt.close();
             } catch (SQLException logOrIgnore) {
-                writeToFile(logOrIgnore.getMessage());
-                writeToFile(logOrIgnore.getStackTrace().toString());
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                logOrIgnore.printStackTrace(pw);
+
+                log.log(Level.SEVERE, logOrIgnore.getMessage(), logOrIgnore);
+                log.log(Level.INFO,pw.toString());
             }
         if (con != null)
             try {
                 con.close();
             } catch (SQLException logOrIgnore) {
-                writeToFile(logOrIgnore.getMessage());
-                writeToFile(logOrIgnore.getStackTrace().toString());
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                logOrIgnore.printStackTrace(pw);
+
+                log.log(Level.SEVERE, logOrIgnore.getMessage(), logOrIgnore);
+                log.log(Level.INFO,pw.toString());
             }
 
     }
@@ -826,29 +889,32 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
         // taskid;queryitem;taskitem1,taskitem2,taskitem3,....
         // the task is removed from the unopned tasks to closed tasks
         // Verify that the input is valid.
-
-        String[] s = input.split(";");
-        String userId = s[0];
-        //String preivousTaskId = s[1];
-        String previousTaskType = s[2];
-        String previousQUeryId = s[3];
-
-        String newTaskId = "";
-        String newqueryId = "";
-        String newqueryItem = "";
-        String newTaskType = "";
-        String newDataItems = "";
-        String newDataSet = "";
-        String newTaskGroup = "";
-        String newTaskEquality = "";
-        String newTaskLevel ="";
-
+        dblock.lock();
+        String toSend = "";
         Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
-        // String reply="error" ;
-        String toSend = "";
         try {
+            String[] s = input.split(";");
+            String userId = s[0];
+            //String preivousTaskId = s[1];
+            String previousTaskType = s[2];
+            String previousQUeryId = s[3];
+
+            String newTaskId = "";
+            String newqueryId = "";
+            String newqueryItem = "";
+            String newTaskType = "";
+            String newDataItems = "";
+            String newDataSet = "";
+            String newTaskGroup = "";
+            String newTaskEquality = "";
+            String newTaskLevel ="";
+
+
+            // String reply="error" ;
+
+
             con = getConnection();
             con.setAutoCommit(false);
 
@@ -1034,22 +1100,29 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             con.commit();
         } catch (Exception e) {
 
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
             try {
                 if (con != null)
                     con.rollback();
             } catch (SQLException e1) {
 
-                e1.printStackTrace();
-                writeToFile(e1.getMessage());
-                writeToFile(e1.getStackTrace().toString());
+                sw = new StringWriter();
+                pw = new PrintWriter(sw);
+                e1.printStackTrace(pw);
+
+                log.log(Level.SEVERE, e1.getMessage(), e1);
+                log.log(Level.INFO,pw.toString());
             }
             // connectToDB();
 
         } finally {
             closeEveryThing(con, stmt, rs);
+            dblock.unlock();
         }
         // input string
 
@@ -1084,9 +1157,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             // stmt.close();
         } catch (Exception e) {
 
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
 
             // connectToDB();
         } finally {
@@ -1117,9 +1193,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             }
         } catch (Exception e) {
 
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
+
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -1134,6 +1214,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
         // taskid;userName;resultindex
         // remove task from open tasks to closed tasks
         // create tasks if neccessary
+        dblock.lock();
         String[] s = input.split(";");
         String userId = s[1];
         String taskType = s[3];
@@ -1168,21 +1249,30 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             con.commit();
         } catch (Exception e) {
 
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
+
             try {
                 if (con != null)
                     con.rollback();
             } catch (SQLException e1) {
-                e1.printStackTrace();
-                writeToFile(e1.getMessage());
-                writeToFile(e1.getStackTrace().toString());
+                sw = new StringWriter();
+                pw = new PrintWriter(sw);
+                e1.printStackTrace(pw);
+
+                log.log(Level.SEVERE, e1.getMessage(), e1);
+                log.log(Level.INFO,pw.toString());
+
             }
             reply = "Error in the previous result please debug";
 
         } finally {
             closeEveryThing(con, stmt, rs);
+            dblock.unlock();
         }
         return reply;
     }
@@ -1257,9 +1347,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             // a decision can be made for taskgroup
             // either make new tasks and a task group
             // or consider the query as solved
-            int decsion = makeDecsion(resultSofar);
+            int decsion=0;
+            if(level==0)
+                decsion = makeDecsionForLeafNode(resultSofar);
+            else
+                decsion = makeDecsion(resultSofar);
 
-            if (decsion % 2 == 0) { // no equality will go down the
+            if (Math.abs(decsion) % 2 == 0) { // no equality will go down the
                 // index
                 if (level == 0) {// this is a leaf task and you get
                     // the final
@@ -1299,10 +1393,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                         int newtaskgourpid = createTaskGroup(con, stmt, rs, q, level - 1,
                                 newReplication);
                         // ArrayList<Integer> users = getTaskUserList();
-                        for (int i = 0; i < newReplication; i++) {
-                            createTaskBreadth(con, stmt, rs, q, level - 1, newReplication,
-                                    newtaskgourpid, dataItems, nodepath2, taskType,equality);
-                        }
+                        if(newtaskgourpid!=-1)
+                            for (int i = 0; i < newReplication; i++) {
+                                createTaskBreadth(con, stmt, rs, q, level - 1, newReplication,
+                                        newtaskgourpid, dataItems, nodepath2, taskType,equality);
+                            }
                     }
 
                 }
@@ -1458,10 +1553,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                             new Integer(queryId), level - 1);
                     int newtaskgourpid = createTaskGroup(con, stmt, rs, q, level - 1,
                             newReplication);
-                    for (int i = 0; i < newReplication; i++) {
-                        createTaskBreadth(con, stmt, rs, q, level - 1, newReplication,
-                                newtaskgourpid, dataItemValues, nodepath2, taskType,equality);
-                    }
+                    if(newtaskgourpid!=-1)
+                        for (int i = 0; i < newReplication; i++) {
+                            createTaskBreadth(con, stmt, rs, q, level - 1, newReplication,
+                                    newtaskgourpid, dataItemValues, nodepath2, taskType,equality);
+                        }
 
 
                 }
@@ -1509,9 +1605,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                         + "' where  id =" + S[0] + "  ;");
             } catch (SQLException e) {
 
-                e.printStackTrace();
-                writeToFile(e.getMessage());
-                writeToFile(e.getStackTrace().toString());
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+
+                log.log(Level.SEVERE, e.getMessage(), e);
+                log.log(Level.INFO,pw.toString());
+
             }
         }
         generateTasks(con, stmt, rs, queryList);
@@ -1955,7 +2055,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                 updateFactor = Constants.UPDATE_FACTOR;
         }
 
-        if (solvedsofar >= replication) {
+        if (solvedsofar == replication) {
 
             ServerSideQueryAnswer finalResult = expandNodeBasedOnWorkerResponses(con, stmt, rs,
                     resultSofar, itemsList, level, updateFactor, queryId, nodepath, treeOrder,
@@ -2037,10 +2137,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                     backTrackLevel);
             int newtaskgourpid = createTaskGroup(con, stmt, rs, q, backTrackLevel, newReplication);
             // ArrayList<Integer> users = getTaskUserList();
-            for (int i = 0; i < newReplication; i++) {
-                createTaskAstar(con, stmt, rs, q, backTrackLevel, newReplication, newtaskgourpid,
-                        backTrackDataItems, backTrackNodePath, taskType, gValue,equality);
-            }
+            if(newtaskgourpid!=-1)
+                for (int i = 0; i < newReplication; i++) {
+                    createTaskAstar(con, stmt, rs, q, backTrackLevel, newReplication, newtaskgourpid,
+                            backTrackDataItems, backTrackNodePath, taskType, gValue,equality);
+                }
             return true;
         } else
             return false;
@@ -2253,7 +2354,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
     @Override
     public String registerUser(String input) throws IllegalArgumentException {
-
+        dblock.lock();
         String[] s = input.split(";");
         String firstName = "";
         String password = "";
@@ -2278,28 +2379,35 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             else
                 message ="Incorrect user name and password";
         } catch (Exception e) {
-            message =e.getMessage();
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
 
         } finally {
             closeEveryThing(con, stmt, rs);
-            return message;
+            dblock.unlock();
         }
-
+        return message;
 
     }
 
     @Override
     public String reset(String s) throws IllegalArgumentException {
-        reset();
+        dblock.lock();
+        try{
+            reset();
+        }finally{
+            dblock.unlock();
+        }
         return null;
     }
 
     @Override
     public String getAvailTask(String s) throws IllegalArgumentException {
-
+        dblock.lock();
         String result = "";
         Connection con = null;
         Statement stmt = null;
@@ -2326,17 +2434,22 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             }
 
         } catch (Exception e) {
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
-            e.printStackTrace();
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
         } finally {
             closeEveryThing(con, stmt, rs);
+            dblock.unlock();
         }
         return result;
     }
 
     @Override
     public String signUp(String input) throws IllegalArgumentException {
+        dblock.lock();
         String[] s = input.split(";");
         String firstName = s[0];
         String password = s[1];
@@ -2363,11 +2476,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             } else
                 reply = "User name already registered";
         } catch (Exception e) {
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
         } finally {
             closeEveryThing(con, stmt, rs);
+            dblock.unlock();
         }
         return reply;
     }
@@ -2446,9 +2563,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             buildReplicationTestCase(con,stmt,rs);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
         } finally {
             closeEveryThing(con, stmt, rs);
         }
@@ -2965,7 +3085,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
     @Override
     public String resetUserTasks(String input) throws IllegalArgumentException {
         // reset user task count for the given user id
-
+        dblock.lock();
         Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -2978,12 +3098,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             stmt.execute(s);
 
         } catch (Exception e) {
-            writeToFile(e.getMessage());
-            writeToFile(e.getStackTrace().toString());
-            e.printStackTrace();
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
             res = "Fail";
         } finally {
             closeEveryThing(con, stmt, rs);
+            dblock.unlock();
         }
         return res;
 
@@ -3318,7 +3442,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             //reaching here means that we are a leaf level and we did not have an equality with a key
             //This means we will choose a key from this key list items
             //as a choice we choose to pick the key less than the current value
-            //TODO another option is choose a midvalue between the two values
+            // another option is choose a midvalue between the two values
             // this will be marked by returning a key less than the current branch
             return new ServerSideQueryAnswer(Double.parseDouble(itemsList[maxloc/2+1]), maxloc);
 
@@ -3441,6 +3565,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
     }
     @Override
     public String skipTask(String input) throws IllegalArgumentException {
+        dblock.lock();
         Connection con = null;
         Statement stmt = null;
         String result = "ok";
@@ -3451,15 +3576,463 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
                     + " where id = " + input + ";";
             stmt.execute(statment);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            writeToFile(e.getStackTrace().toString());
+
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
             result = "fail";
         }
         finally{
             closeEveryThing(con, stmt, null);
+            dblock.unlock();
         }
 
         return result;
+    }
+    /**
+     * This function retrieves a task for the AMT user by ID
+     */
+    @Override
+    public String getTaskById(String input) throws IllegalArgumentException {
+        // this function requests a task from the server
+        // the task is send to the client as a string
+        // the format of task is
+        // taskid;queryitem;taskitem1,taskitem2,taskitem3,....
+        // the task is removed from the unopned tasks to closed tasks
+        // Verify that the input is valid.
+        dblock.lock();
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        // String reply="error" ;
+        String toSend = "";
+        try {
+            String[] s = input.split(";");
+            String userId = s[0];
+            String taskId = s[1];
+            //  String previousTaskType = s[2];
+            //  String previousQUeryId = s[3];
+            String assginmentId = s[4];  //assginment id can either be notavaible or a specific worker
+
+            String newTaskId = "";
+            String newqueryId = "";
+            String newqueryItem = "";
+            String newTaskType = "";
+            String newDataItems = "";
+            String newDataSet = "";
+            String newTaskGroup = "";
+            String newTaskEquality = "";
+            String newTaskLevel ="";
+
+
+
+            con = getConnection();
+            con.setAutoCommit(false);
+
+
+
+            stmt = con.createStatement();
+            String statment ="";
+            if(Constants.ASSIGNMENT_ID_NOT_AVAILABLE.equals(  assginmentId)){ //initially in the preview mode no task assginment to a worker
+                //we will retireive the task to be displayed for workers
+                statment = "select  id,query,queryItem,dataItems,queryModel,dataset,taskgroup,equality,level from crowdindex.task where id = "
+                        + taskId
+                        + " ;";
+            }
+            else{
+                //here an assginment is already made and there is a speicific worker working on this task, then we need to make sure that this worker is unique interms of task group
+                statment = "select  id,query,queryItem,dataItems,queryModel,dataset,taskgroup,equality,level from crowdindex.task t where id = "
+                        + taskId
+                        + " and taskstatus = 0"
+                        + " and "
+                        + userId
+                        + " not in(select user from crowdindex.taskgroupusers u where t.taskgroup = u.taskgroup) ;";
+            }
+            rs = stmt.executeQuery(statment);
+
+            while (rs.next()) {
+
+                newTaskId = "" + rs.getInt("id");
+                newqueryId = "" + rs.getInt("query");
+                newqueryItem = rs.getString("queryItem");
+                newDataItems = rs.getString("dataItems");
+                newTaskType = rs.getString("queryModel");
+                newDataSet = "" + rs.getInt("dataset");
+                newTaskGroup = "" + rs.getInt("taskgroup");
+                newTaskEquality = "" + rs.getInt("equality");
+                newTaskLevel = ""+rs.getInt("level");
+                break;
+                // System.out.println("   "+firstName+" "+password);
+            }
+            rs.close();
+            stmt.close();
+
+            // rs.close();
+            // stmt.close();
+            toSend = newTaskId + ";" + newqueryId + ";" + newqueryItem + ";"+ newTaskEquality + ";"+ newTaskLevel + ";" + newDataItems
+                    + ";" + newTaskType + ";" + newDataSet;
+            if ("2".equals(newDataSet)) {
+                toSend = toSend + ";" + getDataSetItemDetails(newqueryItem);
+                String[] ss = newDataItems.split(",");
+                for (String sss : ss) {
+                    if (sss != null && !"".equals(sss))
+                        toSend = toSend + "@" + getDataSetItemDetails(sss);
+                }
+            } else {
+                toSend = toSend + ";_";
+            }
+            if ("informed".equals(newTaskType)) { // we need to show the
+                // selection of other
+                // workers
+                String frequenceies = getInformedTaskFrequenceis(newTaskGroup);
+                toSend = toSend + ";" + frequenceies;
+            }
+
+            if (newTaskId == null || "".equals(newTaskId) || "null".equals(newTaskId)) {
+                toSend =Constants.USER_PROCESSED_A_SIMILAR_TASK;
+            }
+            //            else if(!Constants.ASSIGNMENT_ID_NOT_AVAILABLE.equals(assginmentId)){
+            //                stmt = con.createStatement();
+            //                statment = "REPLACE INTO crowdindex.taskgroupusers SET user =" + userId
+            //                        + ", taskgroup = " + newTaskGroup
+            //                        + "; update crowdindex.task set taskstatus = 1, user=" + userId
+            //                        + " where id = " + newTaskId + ";";
+            //                stmt.execute(statment);
+            //                // stmt.close();
+            //            }
+
+
+            con.commit();
+        } catch (Exception e) {
+
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
+            try {
+                if (con != null)
+                    con.rollback();
+            } catch (SQLException e1) {
+
+                sw = new StringWriter();
+                pw = new PrintWriter(sw);
+                e1.printStackTrace(pw);
+
+                log.log(Level.SEVERE, e1.getMessage(), e1);
+                log.log(Level.INFO,pw.toString());
+            }
+            // connectToDB();
+
+        } finally {
+            closeEveryThing(con, stmt, rs);
+            dblock.unlock();
+        }
+        // input string
+
+        return toSend;
+    }
+    /**
+     * this method
+     */
+    @Override
+    public synchronized String returnResultAMT(String input) throws IllegalArgumentException {
+        // in this function the result is returned from the client
+        // result is result as a string result format is
+        // taskid;userName;resultindex
+        // remove task from open tasks to closed tasks
+        // create tasks if neccessary
+        dblock.lock();
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        String reply = "Result send successfully";
+        try {
+            String[] s = input.split(";");
+            //      String taskId = s[0];
+            String userId = s[1];
+            String taskType = s[3];
+            //     String assignmentId = s[4];
+            //     String hitId = s[5];
+            //     String amtWorkerId = s[6];
+
+
+
+
+            con = getConnection();
+            con.setAutoCommit(false);
+            stmt = con.createStatement();
+
+
+            int taskstaus =readAndUpdateTaskStatusForCompletedAMTHit(con,stmt,rs,input);
+            if(taskstaus!=2){
+                stmt = con.createStatement();
+                if ("breadth".equals(taskType) || "informed".equals(taskType)) {
+                    reply = handleBreadth(con, stmt, rs, input);
+                } else if ("depth".equals(taskType)) {
+                    reply = handleDepth(con, stmt, rs, input);
+                } else if ("astar".equals(taskType)) {
+                    reply = handleAStar(con, stmt, rs, input);
+                } else if ("test".equals(taskType)) {
+                    reply = handleTest(con, stmt, rs, input);
+                } else if ("insert".equals(taskType)) {
+                    reply = handleInsert(con, stmt, rs, input);
+                }
+                // increment the number of completer tasks for a worker
+                stmt = con.createStatement();
+                String statment = "update crowdindex.users set completedtasks= completedtasks+1 where id =  "
+                        + userId + ";";
+                stmt.execute(statment);
+
+                /* We need to check the number of completed tasks of a user */
+
+                con.commit();
+            }
+        } catch (Exception e) {
+
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            log.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.INFO,pw.toString());
+            try {
+                if (con != null)
+                    con.rollback();
+            } catch (SQLException e1) {
+                sw = new StringWriter();
+                pw = new PrintWriter(sw);
+                e1.printStackTrace(pw);
+
+                log.log(Level.SEVERE, e.getMessage(), e1);
+                log.log(Level.INFO,pw.toString());;
+            }
+            reply = "Error in the previous result please debug";
+
+        } finally {
+            closeEveryThing(con, stmt, rs);
+            dblock.unlock();
+        }
+        return reply;
+
+    }
+    int readAndUpdateTaskStatusForCompletedAMTHit(Connection con,Statement stmt, ResultSet rs,String input ) throws SQLException{
+        String[] s = input.split(";");
+        String taskId = s[0];
+        String userId = s[1];
+
+        String assignmentId = s[4];
+        String hitId = s[5];
+        String amtWorkerId = s[6];
+
+        String statment = "select  id,query,queryItem,dataItems,queryModel,dataset,taskgroup,equality,level,taskstatus from crowdindex.task where id = "
+                + taskId
+                + " ;";
+        rs = stmt.executeQuery(statment);
+
+        String taskGroup="";
+        int taskStatus=0;
+        while (rs.next()) {
+
+            taskGroup = "" + rs.getInt("taskgroup");
+            taskStatus = rs.getInt("taskstatus");
+            break;
+            // System.out.println("   "+firstName+" "+password);
+        }
+        rs.close();
+        stmt.close();
+        if(taskStatus!=2){
+            stmt = con.createStatement();
+            statment = "REPLACE INTO crowdindex.taskgroupusers SET user =" + userId
+                    + ", taskgroup = " + taskGroup
+                    + "; update crowdindex.task set taskstatus = 2, user=" + userId
+                    +", assignmentId ='"+assignmentId+"'"
+                    +", hitId ='"+hitId+"'"
+                    +", workerId ='"+amtWorkerId+"'"
+                    + " where id = " + taskId + ";";
+            stmt.execute(statment);
+        }
+        return taskStatus;
+    }
+    @Override
+    /**
+     * this method retrievs a task from group of tasks based on task group ids
+     */
+    public String getTaskByTaskGroupId(String input) throws IllegalArgumentException {
+        // this function requests a task from the server
+        // the task is send to the client as a string
+        // the format of task is
+        // taskid;queryitem;taskitem1,taskitem2,taskitem3,....
+        // the task is removed from the unopned tasks to closed tasks
+        // Verify that the input is valid.
+        dblock.lock();
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        // String reply="error" ;
+        String toSend = "";
+        try {
+            String[] s = input.split(";");
+            String userId = s[0];
+            String taskGroupId = s[1];
+            String assginmentId = s[4];  //assginment id can either be notavaible or a specific worker
+
+            String newTaskId = "";
+            String newqueryId = "";
+            String newqueryItem = "";
+            String newTaskType = "";
+            String newDataItems = "";
+            String newDataSet = "";
+            String newTaskGroup = "";
+            String newTaskEquality = "";
+            String newTaskLevel ="";
+
+
+
+            con = getConnection();
+            con.setAutoCommit(false);
+
+
+
+            stmt = con.createStatement();
+            String statment ="";
+            if(Constants.ASSIGNMENT_ID_NOT_AVAILABLE.equals(  assginmentId)){ //initially in the preview mode no task assginment to a worker
+                //we will retireive the task to be displayed for workers
+                statment = "select  id,query,queryItem,dataItems,queryModel,dataset,taskgroup,equality,level from crowdindex.task where taskgroup = "
+                        + taskGroupId
+                        + " ;";
+            }
+            else{
+                //here an assginment is already made and there is a speicific worker working on this task, then we need to make sure that this worker is unique interms of task group
+                statment = "select  id,query,queryItem,dataItems,queryModel,dataset,taskgroup,equality,level from crowdindex.task t where taskgroup = "
+                        + taskGroupId
+                        + " and ( taskstatus =0 or taskstatus =1) "
+                        //                        + " and " + userId
+                        //                        + " not in(select user from crowdindex.taskgroupusers u where t.taskgroup = u.taskgroup)"
+                        + " order by assginmentTime ;";
+            }
+            rs = stmt.executeQuery(statment);
+
+            while (rs.next()) {
+
+                newTaskId = "" + rs.getInt("id");
+                newqueryId = "" + rs.getInt("query");
+                newqueryItem = rs.getString("queryItem");
+                newDataItems = rs.getString("dataItems");
+                newTaskType = rs.getString("queryModel");
+                newDataSet = "" + rs.getInt("dataset");
+                newTaskGroup = "" + rs.getInt("taskgroup");
+                newTaskEquality = "" + rs.getInt("equality");
+                newTaskLevel = ""+rs.getInt("level");
+                break;
+                // System.out.println("   "+firstName+" "+password);
+            }
+            rs.close();
+            stmt.close();
+
+            // rs.close();
+            // stmt.close();
+            toSend = newTaskId + ";" + newqueryId + ";" + newqueryItem + ";"+ newTaskEquality + ";"+ newTaskLevel + ";" + newDataItems
+                    + ";" + newTaskType + ";" + newDataSet;
+            if ("2".equals(newDataSet)) {
+                toSend = toSend + ";" + getDataSetItemDetails(newqueryItem);
+                String[] ss = newDataItems.split(",");
+                for (String sss : ss) {
+                    if (sss != null && !"".equals(sss))
+                        toSend = toSend + "@" + getDataSetItemDetails(sss);
+                }
+            } else {
+                toSend = toSend + ";_";
+            }
+            if ("informed".equals(newTaskType)) { // we need to show the
+                // selection of other
+                // workers
+                String frequenceies = getInformedTaskFrequenceis(newTaskGroup);
+                toSend = toSend + ";" + frequenceies;
+            }
+
+            if (newTaskId == null || "".equals(newTaskId) || "null".equals(newTaskId)) {
+                toSend =Constants.USER_PROCESSED_A_SIMILAR_TASK;
+            }
+            else if(!Constants.ASSIGNMENT_ID_NOT_AVAILABLE.equals(assginmentId)){
+                stmt = con.createStatement();
+                statment = "update crowdindex.task set assignmentId = '"+assginmentId+"', user=" + userId
+                        + ", assginmentTime =  CURRENT_TIMESTAMP"
+                        + " where id = " + newTaskId + ";";
+                stmt.execute(statment);
+                // stmt.close();
+            }
+
+
+            con.commit();
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            log.log(Level.SEVERE, e.getMessage(), e);
+            try {
+                if (con != null)
+                    con.rollback();
+            } catch (SQLException e1) {
+
+                e1.printStackTrace();
+                log.log(Level.SEVERE, e1.getMessage(), e1);
+            }
+            // connectToDB();
+
+        } finally {
+            closeEveryThing(con, stmt, rs);
+            dblock.unlock();
+        }
+        // input string
+
+        return toSend;
+    }
+    @Override
+    /**
+     * This method cleans up the data for a task that did not have any answer returned
+     */
+    public String cleanUserData(String taskId) throws IllegalArgumentException {
+        dblock.lock();
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        // String reply="error" ;
+        String toSend = "";
+        try {
+            con = getConnection();
+            con.setAutoCommit(false);
+
+
+
+            stmt = con.createStatement();
+            String statment = "update crowdindex.task set taskstatus=0,user=null,assignmentId=null,hitId=null,"
+                    + "workerId=null,hiturl=null,assginmentTime=null where id="+taskId+" and taskstatus <>2 ";
+            stmt.execute(statment);
+            con.commit();
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            log.log(Level.SEVERE, e.getMessage(), e);
+            try {
+                if (con != null)
+                    con.rollback();
+            } catch (SQLException e1) {
+
+                e1.printStackTrace();
+                log.log(Level.SEVERE, e1.getMessage(), e1);
+            }
+            // connectToDB();
+
+        } finally {
+            closeEveryThing(con, stmt, rs);
+            dblock.unlock();
+        }
+        // input string
+
+        return toSend;
     }
 }

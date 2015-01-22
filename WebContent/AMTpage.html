@@ -1,0 +1,252 @@
+<!doctype html>
+<!-- The DOCTYPE declaration above will set the     -->
+<!-- browser's rendering engine into                -->
+<!-- "Standards Mode". Replacing this declaration   -->
+<!-- with a "Quirks Mode" doctype is not supported. -->
+
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<!--                                                               -->
+<!-- Consider inlining CSS to reduce the number of requested files -->
+<!--                                                               -->
+<link type="text/css" rel="stylesheet" href="Imageindexwebapp.css">
+<link type="text/css" rel="stylesheet" href="css/font-awesome.min.css">
+
+<!--                                           -->
+<!-- Any title is fine                         -->
+<!--                                           -->
+<title>Image comparisons task</title>
+
+<!--                                           -->
+<!-- This script loads your compiled module.   -->
+<!-- If you add any GWT meta tags, they must   -->
+<!-- be added before this line.                -->
+<!--                                           -->
+<script type="text/javascript" language="javascript"
+	src="amtimageindexwebapp/amtimageindexwebapp.nocache.js"></script>
+	
+	<script type="text/javascript" language="javascript"
+	src="js/jquery.min.js"></script>
+	
+	
+	<script type="text/javascript">
+	
+	var qimagewidth = 142;
+	var aitemwidth_px = 168;
+	var aitemwidth_em = 14;
+	var initial_slide = 11;
+
+
+	function slideLeftQueryContent(){
+		// alert($("#query-content").css('left'));
+		var slide = parseInt($('#query-content').attr('slidevalue'));
+		
+		slide = slide - qimagewidth;
+		$('#query-content').attr('slidevalue',slide);
+		$("#query-content").css('left', slide+"px");
+
+	}
+
+	function slideRightQueryContent(){
+		// alert($("#query-content").css('left'));
+		var slide = parseInt($('#query-content').attr('slidevalue'));
+		slide = slide + qimagewidth;
+		$('#query-content').attr('slidevalue',slide);
+		$("#query-content").css('left', slide+"px");
+
+	}
+
+	function slideLeftAnswerContent(){
+		// alert($("#query-content").css('left'));
+		var slide = parseInt($('#answer-wrapper').attr('slidevalue'));
+		if (slide == 0) {
+			slide = slide + initial_slide;
+		}
+		else{
+			slide = slide + aitemwidth_em;
+		}
+		
+		$('#answer-wrapper').attr('slidevalue',slide);
+		$("#answer-wrapper").css('left', slide+"em");
+
+	}
+
+	function slideRightAnswerContent(){
+		// alert($("#query-content").css('left'));
+		var slide = parseInt($('#answer-wrapper').attr('slidevalue'));
+		if (slide == 0) {
+			slide = slide - initial_slide;
+		}
+		else{
+			slide = slide - aitemwidth_em;
+		}
+		
+		$('#answer-wrapper').attr('slidevalue',slide);
+		$("#answer-wrapper").css('left', slide+"em");
+
+	}
+
+	function toggleMoreImgs(itemId){
+		var span = $("#tn-toggle-imgs-"+itemId+" div span")[0];
+		var imgs = $('#'+itemId+' div.img-PushButton');
+		$.each(imgs, function(i,o){
+			if (i > 0){
+				$(o).toggleClass('hidden');
+			}
+		});
+
+		if (span.className == 'fa fa-chevron-down') {
+			console.log("showing more images for "+itemId+", found "+span.className);				
+			$(span).removeClass('fa-chevron-down');
+			$(span).addClass('fa-chevron-up');				
+		}
+		else{
+			$(span).removeClass('fa-chevron-up');		
+			$(span).addClass('fa-chevron-down');			
+		}
+		
+	}
+
+	
+	function initializeQuerySectionHandlers(){
+
+		$("#query-scroll-left").click(function(event) {
+			alert($("#query-content").css('left'));
+		});
+		alert("hi"+$("#query-content").css('left'));
+		console.log("query handlers initialized.");
+	}
+	
+	function initializePage(){		
+		alert('called from GWT');
+	}
+	</script>
+
+
+<style type="text/css">
+body {
+	margin:0px;
+	padding:0px;
+}
+</style>
+</head>
+
+<!--                                           -->
+<!-- The body can have arbitrary html, or      -->
+<!-- you can leave the body empty if you want  -->
+<!-- to create a completely dynamic UI.        -->
+<!--                                           -->
+<body style="margin:0px;padding:0px;">
+
+	<!-- OPTIONAL: include this if you want history support -->
+<!-- 	<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
+		style="position: absolute; width: 0; height: 0; border: 0"></iframe> -->
+
+	<!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+	<noscript>
+		<div
+			style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+			Your web browser must have JavaScript enabled in order for this
+			application to display correctly.</div>
+	</noscript>
+
+	<div id="page">
+		<div id="top">
+			<!-- <img src="title/logo-pu.png" alt="purdue logo" width="200" height="75">-->
+			<!-- <h1>Crowd Indexing Project</h1> -->
+			<span class="top-text appName">Image comparisons task</span>
+			<div id="getTaskButtonContainer"></div>
+			<div id="resetButtonContainer"></div>
+			<div id="skipButtonContainer"></div>
+
+			<div id="info-top">
+			<!-- <span class="top-text">Info.</span> -->
+			<div id="taskAvailabilityLabelContainer" class="top-text"></div>
+			<div id="errorLabelContainer" class="top-text"></div>
+			<div id="taskInfoContainer" class="top-text"></div>
+			</div>
+
+		</div>
+		<div id="taskBarContainer">
+		<div id="statusDiv" ></div>
+		
+		
+		<!--  -->
+		</div>
+		<div id="info">
+			<table align="center">
+			<tr>
+				<td id="signinInstContanier" colspan="6"></td>
+				<!--  colspan="2" style="font-weight:bold; ">Please sign up or log in </td>-->
+			</tr>
+			<tr>
+				<td id="warningInstContanier" colspan="6"></td>
+				<!--style="font-weight:bold;font-size:20px;color: red ">DO NOT USE Your Purdue Account inforation</td>   -->
+			</tr>
+			<tr>
+				<td id="userLabelContanier" colspan="1"></td>
+				<!--User name</td> -->
+				<td id="passwordLabelContanier" colspan="1"></td>
+				<!--Password</td>    -->
+
+
+			</tr>
+			<tr>
+				<td id="nameFieldContainer"></td>
+				<td id="passwordFieldContainer"></td>
+				<td id="registerUserContainer"></td>
+				<td id="signUpButtonContainer"></td>
+				
+			</tr>
+<!-- 			<tr>
+				<td id="getTaskButtonContainer"></td>
+				<td id="resetButtonContainer"></td>
+			</tr> -->
+<!-- 			<tr>
+				<td id="statusDiv" colspan="8"></td>
+			</tr> -->
+
+		</table>
+		</div>
+	<div id="container">
+			<!-- <p>Please select the proper location for the image in the right to the images at left .</p> -->
+			<!--  <legend>Data items</legend>-->
+
+
+
+			<!--  <legend>Query items</legend> -->
+			<div id="right"></div>
+			<!-- right -->
+			<div id="middleslider"></div>
+			<!-- middle slider -->
+			<div id="left"></div>
+			<!-- left -->
+
+			<div class="clear"></div>
+
+
+		</div>
+		<!-- container -->
+	</div>
+
+	
+	<div>
+	
+	
+		
+	</div>
+	
+	
+	  <form action="https://www.mturk.com/mturk/externalSubmit" method="POST">
+	<!--<form action="https://workersandbox.mturk.com/mturk/externalSubmit" method="POST">-->
+	  <input id="assignmentIdField" type="text"   name="assignmentId" ><br>
+	   <input id="workerIdField" type="text"   name="workerId" ><br>
+	    <input id="hitIdField" type="text"   name="hitId" ><br>
+	  <input  id="submitIdField" type="submit"  name="submit2" value="Submitbutton">
+	</form>
+	
+	
+</body>
+</html>

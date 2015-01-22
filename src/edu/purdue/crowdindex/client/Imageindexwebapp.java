@@ -825,10 +825,10 @@ public class Imageindexwebapp implements EntryPoint {
             fPanelRight.add(l);
             queryText = "\r\n\r\nThe target of the experiment is to estimate the size of the square. Below, you are given a collection of squares to compare against.\r\n"
                     + "The squares are sorted from left to right in increasing order of their size.\r\n"
-                    + "It is required to find the square with the closest matching size to the query square.\r\n"
-                    + "If you think that the size of the query  square  lies in-between two consecutive squares, then press the button that is in-between the two squares.\r\n";
-
-            if( equality!=null&&("" + Constants.equality_true).equals(equality)==true)
+                    + "It is required to find the square with the closest matching size to the query square.\r\n";
+            if(!"0".equals(level))
+                queryText =queryText  + "If you think that the size of the query  square  lies in-between two consecutive squares, then press the button that is in-between the two squares.\r\n";
+            if( "0".equals(level)||(equality!=null&&("" + Constants.equality_true).equals(equality)==true))
                 queryText =queryText +  "If you think that the size of the query square  is almost equal to one of the squares, then press the button on top of that square.\r\n";
             if( "informed".equals(taskType))
                 queryText =queryText +  "If a number appears on top of a square images, it shows how many other users have selected this answer.\r\n";
@@ -867,13 +867,14 @@ public class Imageindexwebapp implements EntryPoint {
             queryText = "\r\n\r\nThe target of the experiment is to estimate the price of the car.\r\n"
                     + "Below, you are given a collection of cars to compare against.\r\n"
                     + "The cars are sorted from left to right in increasing order of their price.\r\n"
-                    + "It is required to find the car with the closest matching price to the query car.\r\n"
-                    + "If you think that the price of the query car lies in-between two consecutive cars, then press the button that is in-between the two cars.\r\n";
-            if( equality!=null&&("" + Constants.equality_true).equals(equality)==true)
+                    + "It is required to find the car with the closest matching price to the query car.\r\n";
+            if(!"0".equals(level))
+                queryText =queryText
+                + "If you think that the price of the query car lies in-between two consecutive cars, then press the button that is in-between the two cars.\r\n";
+            if(!"0".equals(level)||( equality!=null&&("" + Constants.equality_true).equals(equality)==true))
                 queryText =queryText +     "If you think that the price of the query car is almost equal to one of the cars, then press the button on top of that car.\r\n";
             if( "informed".equals(taskType))
                 queryText =queryText +  "If a number appears on top of car images, it shows how many other users have selected this answer.\r\n";
-
 
             image = new Image("data/Image_" + queryItem + "/(" + queryItem
                     + "_0).jpg");

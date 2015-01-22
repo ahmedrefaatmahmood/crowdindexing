@@ -1,6 +1,12 @@
 package edu.purdue.crowdindex.shared.control;
 
 public   class Constants {
+    //AMT tasks Constants
+    public static String amtUserName = "amt";
+    public static String amtPassword = "amt";
+    public static String  ASSIGNMENT_ID_NOT_AVAILABLE= "ASSIGNMENT_ID_NOT_AVAILABLE";
+    public static String USER_PROCESSED_A_SIMILAR_TASK = "This hit is not avaible to your user profile, you may have solved an identical hit. Please click 'Return HIT' to avoid any impact on your approval rating.";
+
     //Task constants
     public static String taskStatusNew = "New";
     public static String taskStatusOpen = "Open";
@@ -56,6 +62,7 @@ public   class Constants {
 
     //UI constants
     public static int MaxUserTasks=100;
+    public static int MaxAMTUserTasks=10;
 
     //TODO Obsoloete core to be removed
     public  static  int M = 4;    // max children per B-tree node = M-1
@@ -63,6 +70,7 @@ public   class Constants {
     public static String path= "squareimages";
     //   public static String queryModel = pathBased;  //node based or level based
     public static String queryModel = levelBased;  //node based or level based
+    public static int assignmentDurationInSeconds=120;
 
     static final int MaxReplications = 3;
 

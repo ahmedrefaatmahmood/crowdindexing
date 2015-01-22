@@ -8,7 +8,15 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface GreetingServiceAsync {
     void getTask(String input, AsyncCallback<String> callback)
             throws IllegalArgumentException;
+    void getTaskById(String input, AsyncCallback<String> callback)
+            throws IllegalArgumentException;
+    void getTaskByTaskGroupId(String input, AsyncCallback<String> callback)
+            throws IllegalArgumentException;
     void returnResult(String input, AsyncCallback<String> callback)
+            throws IllegalArgumentException;
+    void returnResultAMT(String s, AsyncCallback<String> callback)
+            throws IllegalArgumentException;
+    void cleanUserData(String s, AsyncCallback<String> callback)
             throws IllegalArgumentException;
     //    void printQueryResults(String input, AsyncCallback<String> callback)
     //            throws IllegalArgumentException;

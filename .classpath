@@ -2,21 +2,130 @@
 <classpath>
 	<classpathentry exported="true" kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0">
+	<classpathentry exported="true" kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0">
 		<attributes>
 			<attribute name="owner.project.facets" value="jst.web"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/mysql-connector-java-5.1.22-bin.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-math-2.2.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gwt-incubator-20101117-r1766.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gwt-servlet.jar"/>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/shared/appengine-local-runtime-shared.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/shared/el-api.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/shared/jsp/repackaged-appengine-ant-1.7.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/shared/jsp/repackaged-appengine-ant-launcher-1.7.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/shared/jsp/repackaged-appengine-jasper-6.0.29.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/shared/jsp/repackaged-appengine-jasper-el-6.0.29.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/shared/jsp/repackaged-appengine-tomcat-juli-6.0.29.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/shared/jsp-api.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/shared/servlet-api.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/appengine-tools-api.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/opt/user/appengine-api-labs/v1/appengine-api-labs.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/opt/user/appengine-endpoints/v1/appengine-endpoints-deps.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/opt/user/appengine-endpoints/v1/appengine-endpoints.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/opt/user/jsr107/v1/appengine-jsr107cache-1.9.15.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/opt/user/jsr107/v1/jsr107cache-1.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/user/appengine-api-1.0-sdk-1.9.15.jar" sourcepath="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/src/user/appengine-api-1.0-sdk-1.9.15-src.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/opt/user/datanucleus/v1/datanucleus-appengine-1.0.10.final.jar" sourcepath="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/src/orm/datanucleus-appengine-1.0.10.final-src.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/opt/user/datanucleus/v1/datanucleus-core-1.1.5.jar" sourcepath="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/src/orm/datanucleus-core-1.1.5-src.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/opt/user/datanucleus/v1/datanucleus-jpa-1.1.5.jar" sourcepath="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/src/orm/datanucleus-jpa-1.1.5-src.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/opt/user/datanucleus/v1/geronimo-jpa_3.0_spec-1.1.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/opt/user/datanucleus/v1/geronimo-jta_1.1_spec-1.1.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/lib/opt/user/datanucleus/v1/jdo2-api-2.3-eb.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/installed/eclipse-jee-kepler-SR1-win32-x86_64/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.15/appengine-java-sdk-1.9.15/docs/javadoc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
 </classpath>
