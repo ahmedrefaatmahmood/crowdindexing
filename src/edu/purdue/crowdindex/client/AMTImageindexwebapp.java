@@ -1017,22 +1017,22 @@ public class AMTImageindexwebapp implements EntryPoint {
             l = new HTML(
                     new SafeHtmlBuilder()
                     .appendEscapedLines(
-                            "You are given the following images of the car under question:\r\n\r\n")
+                            "You are given the following image(s) of the car under question:\r\n\r\n")
                             .toSafeHtml());
             l.setStyleName("instructionlabel");
             fPanelRight.add(l);
-            queryText = "\r\n\r\nThe target of the task is to estimate the price of the car.\r\n"
-                    + "Below, you are given a collection of cars to compare against.\r\n"
-                    + "The cars are sorted from left to right in increasing order of their price.\r\n"
-                    + "IF you see buttons with arrows to the left or the right, this means there are more images to be displayed please scroll to see them .\r\n"
-                    + "It is required to find the car with the closest matching price to the query car.\r\n";
-            if(!"0".equals(level))
-                queryText =queryText
-                + "If you think that the price of the query car lies in-between two consecutive cars, then press the button that is in-between the two cars.\r\n";
-            if(!"0".equals(level)||( equality!=null&&("" + Constants.equality_true).equals(equality)==true))
-                queryText =queryText +     "If you think that the price of the query car is almost equal to one of the cars, then press the button on top of that car.\r\n";
+            queryText = "\r\n\r\nPlease compare the car ABOVE to that of cars BELOW based on your estimation of the selling price of the cars.\r\n"
+                    + "If you see scroll buttons use them  see all images below .\r\n";
+            if(!"0".equals(level)){
+                queryText =queryText  + "If you think the selling price of the car ABOVE is LESS than all cars BELOW, choose the LESS EXPENSIVE radio button .\r\n";
+                queryText =queryText  + "If you think the selling price of the car ABOVE is GREATER than all cars BELOW, choose the MORE EXPENSIVE radio button .\r\n";
+                queryText =queryText  + "If you think the selling price of the car ABOVE falls BETWEEN two of the cars BELOW, choose the radio button BETWEEN those two cars.\r\n";
+            }
+            if( "0".equals(level)||(equality!=null&&("" + Constants.equality_true).equals(equality)==true))
+                queryText =queryText +  "If you think the selling price of the car ABOVE is Equal to one of the cars BELOW Choose the radio button on top the car image BELOW that is CLOSEST in size to the car images ABOVE .\r\n";
             if( "informed".equals(taskType))
-                queryText =queryText +  "If a number appears on top of car images, it shows how many other users have selected this answer.\r\n";
+                queryText =queryText +  "The number appearing on top of a radio button represnts how many other workers choose this answer.\r\n";
+
 
 
             image = new Image("data/Image_" + queryItem + "/(" + queryItem

@@ -64,6 +64,13 @@ public   class Constants {
     public static int MaxUserTasks=100;
     public static int MaxAMTUserTasks=10;
 
+    //DataSetCOnstants
+    public static int minSquaresDataSet=1;
+    public static int minCarsDataSet=1;
+    public static int maxSquaresDataSet=149;
+    public static int maxCarsDataSet=1080;
+    public static int itemsToQueryInTheCarsDataset=50;//any item key that is a multiple of this number will not be added to the index to and this will be the set of query items
+
     //TODO Obsoloete core to be removed
     public  static  int M = 4;    // max children per B-tree node = M-1
     public  static  int imageRectangleSize = 200;    // max children per B-tree node = M-1

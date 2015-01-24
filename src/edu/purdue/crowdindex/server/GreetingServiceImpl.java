@@ -759,11 +759,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
             int treeIndex) {
         if ("query".equals(description)) {
             if (dataset == 1) {// squares data set
-                for (int i = 1; i <= 149; i++)
+                for (int i = 1; i <= Constants.maxSquaresDataSet; i++)
                     tree.put(new Integer(i), "squareimages" + "/(" + i + ").jpg");
             } else {
-                for (int i = 96; i <= 1296; i++)
-                    tree.put(new Integer(i), "usedcarimages2" + "/(" + i + ").jpg");
+                for (int i = Constants.minCarsDataSet; i <= Constants.maxCarsDataSet; i++)
+                    if(i%Constants.itemsToQueryInTheCarsDataset!=0)
+                        tree.put(new Integer(i), "data" + "/(" + i + ").jpg");
             }
         } else if ("insert".equals(description)) {
             keyValueMapForRandomInsertions.put(new Integer(treeIndex), new HashMap<Integer, Integer>());
