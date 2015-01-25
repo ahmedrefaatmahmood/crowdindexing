@@ -103,6 +103,26 @@ h1 {
 	width:50%;
 }
 
+.tooltip-container {
+	float: left;
+	padding: 0.1em;
+	border: black solid thin;
+	background-color: white;
+}
+.tooltip-img {
+	display: block;	
+}
+.tooltip-data {
+	width: 20em;
+	margin: auto;
+	display: block;	
+	
+}
+
+div.ui-tooltip {
+    max-width: 600px;
+}
+
 #query-wrapper {
 	margin-left:auto;
 	margin-right:auto;

@@ -1,6 +1,8 @@
 package edu.purdue.crowdindex.client;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -38,10 +40,16 @@ import com.google.gwt.widgetideas.client.SliderBar;
 
 import edu.purdue.crowdindex.shared.control.Constants;
 
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class AMTImageindexwebapp implements EntryPoint {
+	// Init. Logger
+	
+	Logger logger = Logger.getLogger("AMTPageLogger");	
+    
+	
     private static String buttonWidth = "10em";
     private static String longseperator = "40em";
     private static String smallButtonWidth = "3em";
@@ -150,6 +158,8 @@ public class AMTImageindexwebapp implements EntryPoint {
 	}-*/;
 
     private void getTask() {
+    	
+    	
         errorLabel.setText("");
         String textToServer = userId + ";" + taskId + ";" + taskType + ";"
                 + queryId;
@@ -180,6 +190,7 @@ public class AMTImageindexwebapp implements EntryPoint {
                         dataset = s[7];
                         if ("2".equals(dataset)) {
                             dataItemsDetails = s[8];
+                            logger.info(dataItemsDetails);
                         }
                         else
                             dataItemsDetails=null;
@@ -281,6 +292,7 @@ public class AMTImageindexwebapp implements EntryPoint {
 
     }
     private void getTaskByTaskGroupID() {
+
         errorLabel.setText("");
         if(assignmentId==null||Constants.ASSIGNMENT_ID_NOT_AVAILABLE.equals(assignmentId)){
             assignmentId=Constants.ASSIGNMENT_ID_NOT_AVAILABLE;
@@ -316,7 +328,9 @@ public class AMTImageindexwebapp implements EntryPoint {
                     taskType = s[6];
                     dataset = s[7];
                     if ("2".equals(dataset)) {
+                    	
                         dataItemsDetails = s[8];
+
                     }
                     else
                         dataItemsDetails=null;
@@ -621,7 +635,9 @@ public class AMTImageindexwebapp implements EntryPoint {
             String[] dataiTemslist) {
         String[] dataItemsDetailsList = dataItemsDetails.split("@");
         String[] ss = dataItemsDetailsList[i].split("'");
-
+        String itemstrdetails = ss[2];
+       logger.info("item-details["+i+"]: \n"+itemstrdetails);
+      
         final FlowPanel hPanel = new FlowPanel();
         hPanel.addStyleName("image-answer-item");
         final String itemId = dataiTemslist[i];
@@ -684,6 +700,7 @@ public class AMTImageindexwebapp implements EntryPoint {
             image.setHeight(buttonWidth);
             image.setWidth(buttonWidth);
             PushButton b2 = new PushButton(image);
+            b2.getElement().setAttribute("idata", itemstrdetails);
             b2.addStyleName("img-PushButton");
             b2.setTitle("" + (2 * (i - 1) - 1));
             if (i == dataiTemslist.length - 1
@@ -832,6 +849,7 @@ public class AMTImageindexwebapp implements EntryPoint {
 
     void displayImagesOfAnItem(String radioButtonTitle, String dataitemKey,
             HashMap<String, String> frequenceies, String dataItemDetails) {
+    	
         VerticalPanel wrapper2 = new VerticalPanel();
         RadioButton b;
         Image image;
@@ -1040,6 +1058,9 @@ public class AMTImageindexwebapp implements EntryPoint {
             String[] dataItemsDetailsList = dataItemsDetails.split("@");
 
             String[] ss = dataItemsDetailsList[0].split("'");
+            String itemstrdetails = ss[2];
+            logger.info("query-item-details : \n"+itemstrdetails);
+            
             // showMessageBox("hi"+dataItemsDetails);
             // HorizontalPanel hPanel = new HorizontalPanel();
             // hPanel.setSpacing(5);
@@ -1053,7 +1074,7 @@ public class AMTImageindexwebapp implements EntryPoint {
             hPanelview.getElement().setId("query-content-view");
 
             final FlowPanel hPanel = new FlowPanel();
-            hPanel.getElement().setId("query-content");
+            hPanel.getElement().setId("query-content");            
             hPanel.getElement().setAttribute("slidevalue", "0");
 
             Label l2 = new Label();
@@ -1070,7 +1091,7 @@ public class AMTImageindexwebapp implements EntryPoint {
                         + "_" + j + ").jpg";
                 PushButton b2 = createImagePushButton(queryItem, buttonWidth,
                         buttonWidth, imgUrl);
-
+                b2.getElement().setAttribute("idata", itemstrdetails);
                 hPanel.add(b2);
 
             }
@@ -1429,6 +1450,7 @@ public class AMTImageindexwebapp implements EntryPoint {
     }
     @Override
     public void onModuleLoad() {
+
         readGetRequestArguments();
         createUserSelectionHnadler();
         initPageComponets();
