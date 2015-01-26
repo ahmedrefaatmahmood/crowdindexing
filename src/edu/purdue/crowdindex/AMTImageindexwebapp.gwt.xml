@@ -11,6 +11,10 @@
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
+<inherits name="com.google.gwt.logging.Logging"/>
+ <set-property name="gwt.logging.enabled" value="FALSE"/>             
+    <set-property name="gwt.logging.consoleHandler" value="ENABLED"/>
+    <set-property name="gwt.logging.popupHandler" value="DISABLED"/> 
   <!-- Other module inherits                                      -->
  <inherits name='com.google.gwt.gen2.picker.Picker' /> 
   <inherits name='com.google.gwt.widgetideas.WidgetIdeas'/> 

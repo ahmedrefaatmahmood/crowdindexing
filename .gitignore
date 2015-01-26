@@ -15,7 +15,7 @@ gwt-unitCache/
 WebContent/WEB-INF/deploy/*.*
 WebContent/WEB-INF/classes/*.*
 WebContent/WEB-INF/classes/**/*.*
-
+WebContent/WEB-INF/imageindexwebapp/**
 
 #compilation logs
 .gwt/
@@ -28,6 +28,8 @@ www-test/
 
 #old GWT (1.5) created this dir
 .gwt-tmp/
+.classpath
+.settings/*.*
 
 #MAC OSX
 .DS_Store

@@ -13,6 +13,7 @@
 <!--                                                               -->
 <link type="text/css" rel="stylesheet" href="Imageindexwebapp.css">
 <link type="text/css" rel="stylesheet" href="css/font-awesome.min.css">
+<link type="text/css" rel="stylesheet" href="css/jquery-ui.min.css">
 
 <!--                                           -->
 <!-- Any title is fine                         -->
@@ -27,9 +28,8 @@
 <script type="text/javascript" language="javascript"
 	src="amtimageindexwebapp/amtimageindexwebapp.nocache.js"></script>
 	
-	<script type="text/javascript" language="javascript"
-	src="js/jquery.min.js"></script>
-	
+	<script type="text/javascript" language="javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" language="javascript" src="js/jquery-ui.min.js"></script>
 	
 	<script type="text/javascript">
 	
@@ -122,6 +122,30 @@
 	function initializePage(){		
 		alert('called from GWT');
 	}
+
+	// Tooltips
+	$(function() {
+    $( document ).tooltip({
+      items: ".img-PushButton,.query-image",
+      track: true,
+      show:false,
+      hide:false,
+      content: function() {
+        var element = $( this );
+        if ( element.is( ".query-image" ) ||  element.is( ".img-PushButton" ) ) {
+        	// console.log(element);
+        	var idata = element.attr( "idata" );
+        	var imgsrc = $(element).find("img").attr("src");
+        	var html = "<div class='tooltip-container'><img class='tooltip-img' src='"+imgsrc+"' /><span class='tooltip-data'>"+idata+"</span></div>"
+        	// console.log(html);
+        	return html;
+        	
+          
+        }
+
+      }
+    });
+  });
 	</script>
 
 
